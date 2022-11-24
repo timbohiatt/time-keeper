@@ -30,8 +30,8 @@ locals {
 }
 
 resource "random_integer" "salt" {
-  min = 001
-  max = 999
+  min = 0001
+  max = 9999
 }
 
 resource "google_folder" "folder" {
@@ -41,7 +41,7 @@ resource "google_folder" "folder" {
 
 resource "google_project" "project" {
   folder_id           = google_folder.folder.folder_id
-  name                = var.prefix
+  name                = "${var.prefix}-${var.demo_name}-${var.env}"
   project_id          = "${var.prefix}-${var.demo_name}-${var.env}-${random_integer.salt.result}"
   billing_account     = var.billing_account
   auto_create_network = false
