@@ -1,3 +1,4 @@
+
 /**
  * Copyright 2022 Google LLC
  *
@@ -16,16 +17,8 @@
 
 locals {
   services = [
-    //"servicenetworking.googleapis.com",
-    //"dns.googleapis.com",
-    "iap.googleapis.com",
-    //"stackdriver.googleapis.com",
-    //"cloudresourcemanager.googleapis.com",
-    //"storage-component.googleapis.com",
     "containerregistry.googleapis.com",
     "container.googleapis.com",
-    //"gkehub.googleapis.com",
-    //"mesh.googleapis.com",
   ]
 }
 
@@ -34,15 +27,10 @@ resource "random_integer" "salt" {
   max = 9999
 }
 
-resource "google_folder" "folder" {
-  parent       = var.folder_id
-  display_name = "${var.prefix}-${var.demo_name}"
-}
-
 resource "google_project" "project" {
-  folder_id           = google_folder.folder.folder_id
-  name                = "${var.prefix}-${var.demo_name}-${var.env}"
-  project_id          = "${var.prefix}-${var.demo_name}-${var.env}-${random_integer.salt.result}"
+  folder_id           = var.folder_id
+  name                = "${var.prefix}-${var.demo_name}"
+  project_id          = "${var.prefix}-${var.demo_name}-${random_integer.salt.result}"
   billing_account     = var.billing_account
   auto_create_network = false
 }
@@ -54,4 +42,14 @@ resource "google_project_service" "project_apis" {
 
   disable_dependent_services = true
   disable_on_destroy         = true
+}
+
+
+module "gke-gitlab" {
+  source                     = "./terraform-google-gke-gitlab"
+  project_id                 = google_project.project.project_id
+  certmanager_email          = "no-reply@${google_project.project.project_id}.example.com"
+  gitlab_deletion_protection = false
+  gitlab_db_random_prefix    = true
+  helm_chart_version = "6.6.0"
 }

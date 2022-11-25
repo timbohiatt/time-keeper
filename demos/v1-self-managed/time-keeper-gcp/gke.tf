@@ -84,7 +84,7 @@ resource "google_container_cluster" "gke" {
   //resource_labels = var.cluster_labels
 
   lifecycle {
-    ignore_changes = [master_auth]
+    ignore_changes = [master_auth, node_config[0]]
   }
 
   timeouts {

@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Google LLC
+ * Copyright 2018 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,10 @@
  * limitations under the License.
  */
 
-provider "google" {
+output "gitlab_url" {
+  value = module.gke-gitlab.gitlab_url
 }
 
-provider "google-beta" {
-
+output "root_password_instructions" {
+  value = module.gke-gitlab.root_password_instructions
 }
-
-# Retrieve an access token as the Terraform runner
-data "google_client_config" "provider" {}
-
-/*provider "kubernetes" {
-  host  = "https://${data.google_container_cluster.gke.endpoint}"
-  token = data.google_client_config.provider.access_token
-  cluster_ca_certificate = base64decode(
-    data.google_container_cluster.gke.master_auth[0].cluster_ca_certificate,
-  )
-}*/

@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-provider "google" {
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = ">= 3.44, < 5.0"
+    }
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = ">= 3.44, < 5.0"
+    }
+  }
+  required_version = ">= 0.13"
 }
-
-provider "google-beta" {
-
-}
-
-# Retrieve an access token as the Terraform runner
-data "google_client_config" "provider" {}
-
-/*provider "kubernetes" {
-  host  = "https://${data.google_container_cluster.gke.endpoint}"
-  token = data.google_client_config.provider.access_token
-  cluster_ca_certificate = base64decode(
-    data.google_container_cluster.gke.master_auth[0].cluster_ca_certificate,
-  )
-}*/
