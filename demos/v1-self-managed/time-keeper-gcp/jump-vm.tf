@@ -40,19 +40,10 @@ resource "google_service_account" "jump-vm" {
   display_name = "Service Account jump-vm"
 }
 
-resource "google_project_iam_policy" "project" {
+resource "google_project_iam_member" "jump-vm-admin" {
   project = google_project.project.project_id
-  policy_data = data.google_iam_policy.admin.policy_data
-}
-
-data "google_iam_policy" "admin" {
-  binding {
-    role = "roles/container.admin"
-
-    members = [
-      "serviceAccount:${google_service_account.jump-vm.email}",
-    ]
-  }
+  role    = "roles/container.admin"
+  member  = "serviceAccount:${google_service_account.jump-vm.email}"
 }
 
 resource "google_compute_instance" "jump-vm" {
@@ -76,7 +67,7 @@ resource "google_compute_instance" "jump-vm" {
     //}
   }
 
-  metadata_startup_script = "sudo apt-get install git kubectl google-cloud-sdk-gke-gcloud-auth-plugin -y"
+  metadata_startup_script = "sudo apt-get install git kubectl google-cloud-sdk-gke-gcloud-auth-plugin -y && git clone https://github.com/timbohiatt/time-keeper && cd time-keeper && git checkout timhiatt/v1.0"
 
   service_account {
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.

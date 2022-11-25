@@ -10354,6 +10354,7 @@ metadata:
   name: istio-ingressgateway
   namespace: istio-system
   annotations:
+    networking.gke.io/load-balancer-type: "Internal"
   labels:
     app: istio-ingressgateway
     istio: ingressgateway
