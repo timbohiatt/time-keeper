@@ -16,14 +16,14 @@
 
 locals {
   services = [
-    "servicenetworking.googleapis.com",
-    "dns.googleapis.com",
+    //"servicenetworking.googleapis.com",
+    //"dns.googleapis.com",
     //"iap.googleapis.com",
     //"stackdriver.googleapis.com",
     //"cloudresourcemanager.googleapis.com",
     //"storage-component.googleapis.com",
+    "containerregistry.googleapis.com",
     "container.googleapis.com",
-    //"containerregistry.googleapis.com",
     //"gkehub.googleapis.com",
     //"mesh.googleapis.com",
   ]
