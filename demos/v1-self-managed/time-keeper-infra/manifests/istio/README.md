@@ -14,7 +14,7 @@ Istio By Default installs a External Load Balancer in Google Cloud for the "isti
 
 Modifications to this service were made to change the LoadBalancer type specifically create an internal TCP Load Balancer. 
 
-This was completed by adding the annotation: ```networking.gke.io/load-balancer-type: "Internal"```
+This was completed by adding the annotation to the "istio-ingressgateway" service: ```networking.gke.io/load-balancer-type: "Internal"```
 
 ```
 apiVersion: v1
