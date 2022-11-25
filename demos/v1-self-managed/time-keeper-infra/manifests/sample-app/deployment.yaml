@@ -5,6 +5,19 @@ metadata:
 spec:
   hosts:
   - hello-world.default.svc.cluster.local
+  http:
+  - name: "hello-world"
+    match:
+    - uri:
+        prefix: "/"
+    route:
+    - destination:
+        host: hello-world.default.svc.cluster.local
+        subset: v2
+  - name: "hello-world"
+    route:
+    - destination:
+        host: hello-world.default.svc.cluster.local
 ---
 apiVersion: v1
 kind: Service
