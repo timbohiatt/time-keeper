@@ -4,10 +4,7 @@ metadata:
   name: hello-world
 spec:
   hosts:
-  - name: "hello-world"
-    route: 
-    - destination:
-        host: hello-world.default.svc.cluster.local
+  - hello-world.default.svc.cluster.local
 ---
 apiVersion: v1
 kind: Service
