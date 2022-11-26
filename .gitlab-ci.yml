@@ -23,6 +23,18 @@ stages:          # List of stages for jobs, and their order of execution
   - pre-production
   - production
 
+image:
+  name: hashicorp/terraform:light
+  entrypoint:
+    - '/usr/bin/env'
+    - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+
+before_script:
+  - export GOOGLE_APPLICATION_CREDENTIALS=${GCP_SERVICE_ACCOUNT}
+  - rm -rf .terraform
+  - terraform --version
+  - terraform init
+
 v1-infra-core-automated-testing:
   stage: automated-testing
   rules:
@@ -30,7 +42,9 @@ v1-infra-core-automated-testing:
     when: on_success
     changes:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
-  script: echo "Running AUTOMATED TESTING Environment for Core Infra!"
+  script: 
+  - echo "Running AUTOMATED TESTING Environment for Core Infra!"
+  - terraform plan -chdir="demos/v1-self-managed/time-keeper-gcp" -var="env=at"
     
 v1-infra-core-integration:
   stage: integration
@@ -39,7 +53,9 @@ v1-infra-core-integration:
     when: on_success
     changes:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
-  script: echo "Running INTEGRATION Environment for Core Infra!"
+  script: 
+  - echo "Running INTEGRATION Environment for Core Infra!"
+  - terraform plan -chdir="demos/v1-self-managed/time-keeper-gcp" -var="env=int"
 
 v1-infra-core-validation:
   stage: validation
@@ -48,7 +64,9 @@ v1-infra-core-validation:
     when: on_success
     changes:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
-  script: echo "Running VALIDATION Environment for Core Infra!"
+  script: 
+  - echo "Running VALIDATION Environment for Core Infra!"
+  - terraform plan -chdir="demos/v1-self-managed/time-keeper-gcp" -var="env=val"
 
 v1-infra-core-pre-production:
   stage: pre-production
@@ -58,7 +76,9 @@ v1-infra-core-pre-production:
     when: on_success
     changes:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
-  script: echo "Running PRE-PRODUCTION Environment for Core Infra!"
+  script: 
+  - echo "Running PRE-PRODUCTION Environment for Core Infra!"
+  - terraform plan -chdir="demos/v1-self-managed/time-keeper-gcp" -var="env=pp"
 
 v1-infra-core-production:
   stage: production
@@ -68,4 +88,6 @@ v1-infra-core-production:
     when: on_success
     changes:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
-  script: echo "Running PRODUCTION Environment for Core Infra!"
+  script: 
+  - echo "Running PRODUCTION Environment for Core Infra!"
+  - terraform plan -chdir="demos/v1-self-managed/time-keeper-gcp" -var="env=p"
