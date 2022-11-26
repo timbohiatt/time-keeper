@@ -17,55 +17,54 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 stages:          # List of stages for jobs, and their order of execution
-  - at
-  - int
-  - val
-  - pp
-  - p
+  - automated-testing
+  - integration
+  - validation
+  - pre-production
+  - production
 
-v1-infra-core-at:
-  stage: at
+v1-infra-core-automated-testing:
+  stage: automated-testing
   rules:
-  - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "env/at"'
+  - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
     when: on_success
     changes:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
-  script: echo "Running AUTOMATION TESTING Environment for Core Infra!"
+  script: echo "Running AUTOMATED TESTING Environment for Core Infra!"
     
-
-v1-infra-core-int:
-  stage: int
+v1-infra-core-integration:
+  stage: integration
   rules:
-  - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "env/int"'
+  - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
     when: on_success
     changes:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
   script: echo "Running INTEGRATION Environment for Core Infra!"
 
-v1-infra-core-val:
-  stage: val
+v1-infra-core-validation:
+  stage: validation
   rules:
-  - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "env/val"'
+  - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
     when: on_success
     changes:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
   script: echo "Running VALIDATION Environment for Core Infra!"
 
-v1-infra-core-pp:
-  stage: pp
+v1-infra-core-pre-production:
+  stage: pre-production
   when: manual
   rules:
-  - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "env/pp"'
+  - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
     when: on_success
     changes:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
   script: echo "Running PRE-PRODUCTION Environment for Core Infra!"
 
-v1-infra-core-p:
-  stage: p
+v1-infra-core-production:
+  stage: production
   when: manual
   rules:
-  - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "env/p"'
+  - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
     when: on_success
     changes:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
