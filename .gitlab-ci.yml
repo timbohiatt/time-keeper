@@ -15,6 +15,7 @@ before_script:
 
 
 gcp-auth:
+  stage: gcp-auth
   image: google/cloud-sdk:slim
   script:
     - echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
@@ -26,6 +27,7 @@ gcp-auth:
     - gcloud auth list
 
 gcp-sts:
+  stage: gcp-sts
   image: dwdraju/alpine-curl-jq
   script: 
    ./gcp-sts.sh
