@@ -36,7 +36,7 @@ resource "random_integer" "salt" {
 
 resource "google_folder" "folder" {
   parent       = var.folder_id
-  display_name = "${var.prefix}-${var.demo_name}"
+  display_name = "${var.prefix}-${var.demo_name}-${var.env}"
 }
 
 resource "google_project" "project" {
