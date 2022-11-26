@@ -22,7 +22,7 @@ provider "google-beta" {
 }
 
 # Retrieve an access token as the Terraform runner
-data "google_client_config" "provider" {}
+//data "google_client_config" "provider" {}
 
 /*provider "kubernetes" {
   host  = "https://${data.google_container_cluster.gke.endpoint}"
