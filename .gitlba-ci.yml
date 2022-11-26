@@ -17,9 +17,19 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 stages:          # List of stages for jobs, and their order of execution
+  - sample
   - build
   - test
   - deploy
+
+job:
+  stage: sample
+  script: echo "Hello, Rules!"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: manual
+      allow_failure: true
+    - if: $CI_PIPELINE_SOURCE == "push"
 
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
