@@ -1,41 +1,17 @@
-# This file is a template, and might need editing before it works on your project.
-# This is a sample GitLab CI/CD configuration file that should run without any modifications.
-# It demonstrates a basic 3 stage CI/CD pipeline. Instead of real tests or scripts,
-# it uses echo commands to simulate the pipeline execution.
-#
-# A pipeline is composed of independent jobs that run scripts, grouped into stages.
-# Stages run in sequential order, but jobs within stages run in parallel.
-#
-# For more information, see: https://docs.gitlab.com/ee/ci/yaml/index.html#stages
-#
-# You can copy and paste this template into a new `.gitlab-ci.yml` file.
-# You should not add this template to an existing `.gitlab-ci.yml` file by using the `include:` keyword.
-#
-# To contribute improvements to CI/CD templates, please follow the Development guide at:
-# https://docs.gitlab.com/ee/development/cicd/templates.html
-# This specific template is located at:
-# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
-stages:          # List of stages for jobs, and their order of execution
+
+stages:
   - automated-testing
   - integration
   - validation
   - pre-production
   - production
 
-image:
-  name: hashicorp/terraform:light
-  entrypoint:
-    - '/usr/bin/env'
-    - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
-
 before_script:
   - export GOOGLE_APPLICATION_CREDENTIALS=${GCP_SERVICE_ACCOUNT}
   - rm -rf .terraform
-  - terraform --version
-  - terraform init
 
-v1-infra-core-automated-testing:
+v1-infra-core-automated-testing-step-0:
   stage: automated-testing
   rules:
   - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
@@ -44,7 +20,25 @@ v1-infra-core-automated-testing:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
   script: 
   - echo "Running AUTOMATED TESTING Environment for Core Infra!"
-  - terraform plan -chdir="demos/v1-self-managed/time-keeper-gcp" -var="env=at"
+
+v1-infra-core-automated-testing-step-1:
+  stage: automated-testing
+  needs: ["v1-infra-core-automated-testing-step-0"]
+  rules:
+  - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
+    when: on_success
+    changes:
+      - demos/v1-self-managed/time-keeper-gcp/**/* 
+  image:
+    name: hashicorp/terraform:light
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  script: 
+    - export TF_WORKSPACE="at"
+    - terraform --version
+    - terraform init
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp" plan -var="env=at"
     
 v1-infra-core-integration:
   stage: integration
@@ -53,9 +47,17 @@ v1-infra-core-integration:
     when: on_success
     changes:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
+  image:
+    name: hashicorp/terraform:light
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   script: 
-  - echo "Running INTEGRATION Environment for Core Infra!"
-  - terraform plan -chdir="demos/v1-self-managed/time-keeper-gcp" -var="env=int"
+    - echo "Running INTEGRATION Environment for Core Infra!"
+    - export TF_WORKSPACE="int"
+    - terraform --version
+    - terraform init
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp" plan -var="env=int"
 
 v1-infra-core-validation:
   stage: validation
@@ -64,9 +66,17 @@ v1-infra-core-validation:
     when: on_success
     changes:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
+  image:
+    name: hashicorp/terraform:light
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   script: 
-  - echo "Running VALIDATION Environment for Core Infra!"
-  - terraform plan -chdir="demos/v1-self-managed/time-keeper-gcp" -var="env=val"
+    - echo "Running VALIDATION Environment for Core Infra!"
+    - export TF_WORKSPACE="val"
+    - terraform --version
+    - terraform init
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp" plan -var="env=val"
 
 v1-infra-core-pre-production:
   stage: pre-production
@@ -76,9 +86,18 @@ v1-infra-core-pre-production:
     when: on_success
     changes:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
+  image:
+    name: hashicorp/terraform:light
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   script: 
-  - echo "Running PRE-PRODUCTION Environment for Core Infra!"
-  - terraform plan -chdir="demos/v1-self-managed/time-keeper-gcp" -var="env=pp"
+    - echo "Running PRE-PRODUCTION Environment for Core Infra!"
+    - export TF_WORKSPACE="pp"
+    - terraform --version
+    - terraform init
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp" plan -var="env=pp"
+
 
 v1-infra-core-production:
   stage: production
@@ -88,6 +107,14 @@ v1-infra-core-production:
     when: on_success
     changes:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
+  image:
+    name: hashicorp/terraform:light
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   script: 
-  - echo "Running PRODUCTION Environment for Core Infra!"
-  - terraform plan -chdir="demos/v1-self-managed/time-keeper-gcp" -var="env=p"
+    - echo "Running PRODUCTION Environment for Core Infra!"
+    - export TF_WORKSPACE="p"
+    - terraform --version
+    - terraform init
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp" plan -var="env=p"
