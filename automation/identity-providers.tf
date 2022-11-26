@@ -13,7 +13,7 @@ locals {
       issuer              = "gitlab"
       custom_settings = {
         issuer_uri        = "${module.gke-gitlab.gitlab_url}/"
-        allowed_audiences = ["${module.gke-gitlab.gitlab_url}/"]
+        allowed_audiences = ["${module.gke-gitlab.gitlab_url}"]
       }
     }
   }
@@ -102,5 +102,3 @@ output "GCP_WORKLOAD_IDENTITY_PROVIDER" {
 output "GCP_SERVICE_ACCOUNT" {
   value = google_service_account.gitlab-runner.email
 }
-
-
