@@ -38,7 +38,7 @@ v1-infra-core-automated-testing-step-1:
   script: 
     - export TF_WORKSPACE="at"
     - terraform --version
-    - terraform init
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at"
     
 v1-infra-core-integration:
@@ -57,7 +57,7 @@ v1-infra-core-integration:
     - echo "Running INTEGRATION Environment for Core Infra!"
     - export TF_WORKSPACE="int"
     - terraform --version
-    - terraform init
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=int"
 
 v1-infra-core-validation:
@@ -76,7 +76,7 @@ v1-infra-core-validation:
     - echo "Running VALIDATION Environment for Core Infra!"
     - export TF_WORKSPACE="val"
     - terraform --version
-    - terraform init
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=val"
 
 v1-infra-core-pre-production:
@@ -96,7 +96,7 @@ v1-infra-core-pre-production:
     - echo "Running PRE-PRODUCTION Environment for Core Infra!"
     - export TF_WORKSPACE="pp"
     - terraform --version
-    - terraform init
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=pp"
 
 
@@ -117,5 +117,5 @@ v1-infra-core-production:
     - echo "Running PRODUCTION Environment for Core Infra!"
     - export TF_WORKSPACE="p"
     - terraform --version
-    - terraform init
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=p"
