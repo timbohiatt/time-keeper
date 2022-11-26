@@ -14,7 +14,7 @@ before_script:
   - rm -rf .terraform
 
 
-gcp-auth:
+v1-pre-auth:
   stage: gcp-auth
   image: google/cloud-sdk:slim
   script:
@@ -26,7 +26,7 @@ gcp-auth:
     - gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
     - gcloud auth list
 
-gcp-sts:
+v1-auth:
   stage: gcp-sts
   image: dwdraju/alpine-curl-jq
   script: 
