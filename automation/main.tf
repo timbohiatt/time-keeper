@@ -19,6 +19,10 @@ locals {
   services = [
     "containerregistry.googleapis.com",
     "container.googleapis.com",
+    "iam.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "iamcredentials.googleapis.com",
+    "sts.googleapis.com",
   ]
 }
 
@@ -51,5 +55,5 @@ module "gke-gitlab" {
   certmanager_email          = "no-reply@${google_project.project.project_id}.example.com"
   gitlab_deletion_protection = false
   gitlab_db_random_prefix    = true
-  helm_chart_version = "6.6.0"
+  helm_chart_version         = "6.6.0"
 }

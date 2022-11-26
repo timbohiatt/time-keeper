@@ -1,6 +1,8 @@
 
 
 stages:
+  - gcp-auth
+  - gcp-sts
   - automated-testing
   - integration
   - validation
@@ -11,6 +13,23 @@ before_script:
   - export GOOGLE_APPLICATION_CREDENTIALS=${GCP_SERVICE_ACCOUNT}
   - rm -rf .terraform
 
+
+gcp-auth:
+  image: google/cloud-sdk:slim
+  script:
+    - echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
+    - gcloud iam workload-identity-pools create-cred-config ${GCP_WORKLOAD_IDENTITY_PROVIDER}
+      --service-account="${GCP_SERVICE_ACCOUNT}"
+      --output-file=.gcp_temp_cred.json
+      --credential-source-file=.ci_job_jwt_file
+    - gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
+    - gcloud auth list
+
+gcp-sts:
+  image: dwdraju/alpine-curl-jq
+  script: 
+   ./gcp-sts.sh
+
 v1-infra-core-automated-testing-step-0:
   stage: automated-testing
   rules:
@@ -18,9 +37,9 @@ v1-infra-core-automated-testing-step-0:
     when: on_success
     changes:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
-  script: 
+  script:
     - echo "Running AUTOMATED TESTING Environment for Core Infra!"
-    - ls demos/v1-self-managed/time-keeper-gcp/
+
 
 v1-infra-core-automated-testing-step-1:
   stage: automated-testing

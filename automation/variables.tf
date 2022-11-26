@@ -31,5 +31,5 @@ variable "region" {
 }
 
 variable "demo_name" {
-    type = string
+  type = string
 }
