@@ -2,7 +2,6 @@ variables:
   GCP_SERVICE_ACCOUNT: $GCP_SERVICE_ACCOUNT
   GCP_WORKLOAD_IDENTITY_PROVIDER: $GCP_WORKLOAD_IDENTITY_PROVIDER
   GCP_SERVICE_ACCOUNT: $GCP_SERVICE_ACCOUNT
-  CI_JOB_JWT_V2: ${CI_JOB_JWT_V2}
 
 stages:
   - gcp-auth
@@ -14,11 +13,11 @@ stages:
   - production
 
 before_script:
-  - export GOOGLE_APPLICATION_CREDENTIALS=${GCP_SERVICE_ACCOUNT}
+  - export GOOGLE_APPLICATION_CREDENTIALS=$GCP_SERVICE_ACCOUNT
   - echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
   - cat .ci_job_jwt_file
-  - echo "${GCP_WORKLOAD_IDENTITY_PROVIDER}"
-  - echo "${GCP_SERVICE_ACCOUNT}"
+  - echo $GCP_WORKLOAD_IDENTITY_PROVIDER
+  - echo $GCP_SERVICE_ACCOUNT
   - rm -rf .terraform
 
 
