@@ -38,8 +38,8 @@ v1-infra-core-automated-testing-step-0:
   - if: '$CI_PIPELINE_SOURCE == "push"'
   #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
     when: on_success
-    changes:
-      - demos/v1-self-managed/time-keeper-gcp/**/* 
+  #  changes:
+  #    - demos/v1-self-managed/time-keeper-gcp/**/* 
   image: google/cloud-sdk:slim
   script:
   #  - echo "$GOOGLE_CLOUD_KEYFILE_JSON"
@@ -57,8 +57,8 @@ v1-infra-core-automated-testing-step-1:
   - if: '$CI_PIPELINE_SOURCE == "push"'
   #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
     when: on_success
-    changes:
-      - demos/v1-self-managed/time-keeper-gcp/**/* 
+  #  changes:
+  #    - demos/v1-self-managed/time-keeper-gcp/**/* 
   image:
     name: hashicorp/terraform:light
     entrypoint:
