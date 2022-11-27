@@ -15,30 +15,17 @@ before_script:
   - rm -rf .terraform
 
 
-v1-auth-0:
+v1-auth-1:
   stage: gcp-auth
   image: google/cloud-sdk:slim
   script:
-    - echo $CI_JOB_JWT_V2 > .ci_job_jwt_file
-    - cat .ci_job_jwt_file
-    - echo "$GCP_WORKLOAD_IDENTITY_PROVIDER"
-    - echo "$GCP_SERVICE_ACCOUNT"
-    - gcloud iam workload-identity-pools create-cred-config "$GCP_WORKLOAD_IDENTITY_PROVIDER"
-      --service-account="$GCP_SERVICE_ACCOUNT"
+    - echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
+    - gcloud iam workload-identity-pools create-cred-config "${GCP_WORKLOAD_IDENTITY_PROVIDER}"
+      --service-account="${GCP_SERVICE_ACCOUNT}"
       --output-file=.gcp_temp_cred.json
       --credential-source-file=.ci_job_jwt_file
     - gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
-    - gcloud auth list
 
-v1-auth-1:
-  stage: gcp-auth
-  needs: ["v1-auth-0"]
-  image: dwdraju/alpine-curl-jq
-  script: 
-   ./gcp-sts.sh
-  artifacts:
-    reports:
-      dotenv: CLOUDSDK_AUTH_ACCESS_TOKEN.env
 
 v1-infra-core-automated-testing-step-0:
   stage: automated-testing
