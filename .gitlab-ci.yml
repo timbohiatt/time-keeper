@@ -5,7 +5,6 @@ variables:
 
 stages:
   - gcp-auth
-  - gcp-sts
   - automated-testing
   - integration
   - validation
@@ -16,7 +15,7 @@ before_script:
   - rm -rf .terraform
 
 
-v1-pre-auth:
+v1-auth-0:
   stage: gcp-auth
   image: google/cloud-sdk:slim
   script:
@@ -31,14 +30,21 @@ v1-pre-auth:
     - gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
     - gcloud auth list
 
-v1-auth:
-  stage: gcp-sts
+v1-auth-1:
+  stage: gcp-auth
+  needs: ["v1-auth-0"]
   image: dwdraju/alpine-curl-jq
   script: 
    ./gcp-sts.sh
+  artifacts:
+    reports:
+      dotenv: CLOUDSDK_AUTH_ACCESS_TOKEN.env
 
 v1-infra-core-automated-testing-step-0:
   stage: automated-testing
+  needs:
+    - job: "v1-auth-1"
+      artifacts: true
   rules:
   - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
     when: on_success
@@ -46,11 +52,16 @@ v1-infra-core-automated-testing-step-0:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
   script:
     - echo "Running AUTOMATED TESTING Environment for Core Infra!"
+    - echo "Cloud Access Token - ${CLOUDSDK_AUTH_ACCESS_TOKEN}"
+
 
 
 v1-infra-core-automated-testing-step-1:
   stage: automated-testing
-  needs: ["v1-infra-core-automated-testing-step-0"]
+  needs: 
+    - job: "v1-auth-1"
+      artifacts: true
+    - job: "v1-infra-core-automated-testing-step-0"
   rules:
   - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
     when: on_success
