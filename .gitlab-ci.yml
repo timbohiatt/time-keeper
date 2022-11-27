@@ -15,7 +15,7 @@ before_script:
   - rm -rf .terraform
 
 
-v1-auth-1:
+v1-auth-0:
   stage: gcp-auth
   image: google/cloud-sdk:slim
   script:
@@ -30,23 +30,23 @@ v1-auth-1:
 v1-infra-core-automated-testing-step-0:
   stage: automated-testing
   needs:
-    - job: "v1-auth-1"
+    - job: "v1-auth-0"
       artifacts: true
   rules:
   - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
     when: on_success
     changes:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
+  image: google/cloud-sdk:slim
   script:
+    - gcloud auth list
     - echo "Running AUTOMATED TESTING Environment for Core Infra!"
-    - echo "Cloud Access Token - ${CLOUDSDK_AUTH_ACCESS_TOKEN}"
-
 
 
 v1-infra-core-automated-testing-step-1:
   stage: automated-testing
   needs: 
-    - job: "v1-auth-1"
+    - job: "v1-auth-0"
       artifacts: true
     - job: "v1-infra-core-automated-testing-step-0"
   rules:
