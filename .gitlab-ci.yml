@@ -11,9 +11,11 @@ stages:
   - pre-production
   - production
 
-default:
+
+v1-auth-0:
+  stage: gcp-auth
   image: google/cloud-sdk:slim
-  before_script:
+  script:
     - echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
     - gcloud iam workload-identity-pools create-cred-config "${GCP_WORKLOAD_IDENTITY_PROVIDER}"
       --service-account="${GCP_SERVICE_ACCOUNT}"
@@ -21,25 +23,17 @@ default:
       --credential-source-file=.ci_job_jwt_file
     - gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
     - rm -rf .terraform
-
-
-#v1-auth-0:
-#  stage: gcp-auth
-#  image: google/cloud-sdk:slim
-#  script:
-#    - echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
-#    - gcloud iam workload-identity-pools create-cred-config "${GCP_WORKLOAD_IDENTITY_PROVIDER}"
-#      --service-account="${GCP_SERVICE_ACCOUNT}"
-#      --output-file=.gcp_temp_cred.json
-#      --credential-source-file=.ci_job_jwt_file
-#    - gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
+    - echo "GOOGLE_CLOUD_KEYFILE_JSON=$(cat `pwd`/.gcp_temp_cred.json)" >> GOOGLE_CLOUD_KEYFILE_JSON.env
+  artifacts:
+    reports:
+      dotenv: GOOGLE_CLOUD_KEYFILE_JSON.env
 
 
 v1-infra-core-automated-testing-step-0:
   stage: automated-testing
   needs:
-#    - job: "v1-auth-0"
-#      artifacts: true
+    - job: v1-auth-0
+      artifacts: true
   rules:
   - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
     when: on_success
@@ -47,6 +41,7 @@ v1-infra-core-automated-testing-step-0:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
   image: google/cloud-sdk:slim
   script:
+    - echo "$GOOGLE_CLOUD_KEYFILE_JSON"
     - gcloud auth list
     - echo "Running AUTOMATED TESTING Environment for Core Infra!"
 
@@ -54,8 +49,8 @@ v1-infra-core-automated-testing-step-0:
 v1-infra-core-automated-testing-step-1:
   stage: automated-testing
   needs: 
-#    - job: "v1-auth-0"
-#      artifacts: true
+    - job: v1-auth-0
+      artifacts: true
     - job: "v1-infra-core-automated-testing-step-0"
   rules:
   - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
@@ -69,12 +64,16 @@ v1-infra-core-automated-testing-step-1:
       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   script: 
     - export TF_WORKSPACE="at"
+    - echo "$GOOGLE_CLOUD_KEYFILE_JSON"
     - terraform --version
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at"
     
 v1-infra-core-integration:
   stage: integration
+  needs: 
+    - job: v1-auth-0
+      artifacts: true
   rules:
   - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
     when: on_success
@@ -94,6 +93,9 @@ v1-infra-core-integration:
 
 v1-infra-core-validation:
   stage: validation
+  needs: 
+    - job: v1-auth-0
+      artifacts: true
   rules:
   - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
     when: on_success
