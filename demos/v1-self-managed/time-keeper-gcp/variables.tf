@@ -41,3 +41,6 @@ variable "env" {
   type = string
 }
 
+variable "GitLabServiceAccountEmail"{
+  type = string
+}

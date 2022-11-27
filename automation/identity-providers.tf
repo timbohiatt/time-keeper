@@ -1,12 +1,12 @@
 locals {
   serviceAccountIAMRoles = [
     "roles/iam.serviceAccountUser",
-    "roles/resourcemanager.organizationAdmin",
+    //"roles/resourcemanager.organizationAdmin",
     //"roles/iam.workloadIdentityUser",
-    "roles/resourcemanager.projectCreator",
-    "roles/resourcemanager.projectIamAdmin",
-    "roles/container.clusterAdmin",
-    "roles/compute.admin",
+    //"roles/resourcemanager.projectCreator",
+    //"roles/resourcemanager.projectIamAdmin",
+    //"roles/container.clusterAdmin",
+    //"roles/compute.admin",
   ]
 }
 
@@ -58,7 +58,7 @@ resource "google_service_account" "gitlab_service_account" {
 }
 
 resource "google_service_account_iam_member" "gitlab_service_account_iam_member" {
-  count              = length(local.services)
+  count              = length(local.serviceAccountIAMRoles)
   service_account_id = google_service_account.gitlab_service_account.name
   role               = element(local.serviceAccountIAMRoles, count.index)
   member             = "serviceAccount:${google_service_account.gitlab_service_account.email}"
@@ -70,10 +70,9 @@ resource "google_service_account_iam_binding" "gitlab_service_account_iam_bindin
   role               = "roles/iam.workloadIdentityUser"
 
   members = [
-    "principalSet://iam.googleapis.com/projects/${google_project.project.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.gitlab_identity_pool.id}/*",
+    "principalSet://iam.googleapis.com/projects/${google_project.project.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.gitlab_identity_pool.workload_identity_pool_id}/*",
   ]
 }
-
 
 output "GCP_WORKLOAD_IDENTITY_PROVIDER" {
   value = google_iam_workload_identity_pool_provider.gitlab_identity_pool_provider.name
