@@ -11,27 +11,36 @@ stages:
   - pre-production
   - production
 
-before_script:
-  - rm -rf .terraform
+default:
+  before_script:
+    image: google/cloud-sdk:slim
+    script:
+      - echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
+      - gcloud iam workload-identity-pools create-cred-config "${GCP_WORKLOAD_IDENTITY_PROVIDER}"
+        --service-account="${GCP_SERVICE_ACCOUNT}"
+        --output-file=.gcp_temp_cred.json
+        --credential-source-file=.ci_job_jwt_file
+      - gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
+      - rm -rf .terraform
 
 
-v1-auth-0:
-  stage: gcp-auth
-  image: google/cloud-sdk:slim
-  script:
-    - echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
-    - gcloud iam workload-identity-pools create-cred-config "${GCP_WORKLOAD_IDENTITY_PROVIDER}"
-      --service-account="${GCP_SERVICE_ACCOUNT}"
-      --output-file=.gcp_temp_cred.json
-      --credential-source-file=.ci_job_jwt_file
-    - gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
+#v1-auth-0:
+#  stage: gcp-auth
+#  image: google/cloud-sdk:slim
+#  script:
+#    - echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
+#    - gcloud iam workload-identity-pools create-cred-config "${GCP_WORKLOAD_IDENTITY_PROVIDER}"
+#      --service-account="${GCP_SERVICE_ACCOUNT}"
+#      --output-file=.gcp_temp_cred.json
+#      --credential-source-file=.ci_job_jwt_file
+#    - gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
 
 
 v1-infra-core-automated-testing-step-0:
   stage: automated-testing
   needs:
-    - job: "v1-auth-0"
-      artifacts: true
+#    - job: "v1-auth-0"
+#      artifacts: true
   rules:
   - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
     when: on_success
@@ -46,8 +55,8 @@ v1-infra-core-automated-testing-step-0:
 v1-infra-core-automated-testing-step-1:
   stage: automated-testing
   needs: 
-    - job: "v1-auth-0"
-      artifacts: true
+#    - job: "v1-auth-0"
+#      artifacts: true
     - job: "v1-infra-core-automated-testing-step-0"
   rules:
   - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
