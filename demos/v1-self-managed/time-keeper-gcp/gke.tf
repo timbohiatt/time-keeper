@@ -3,7 +3,7 @@ resource "google_container_cluster" "gke" {
   provider = google-beta
 
   project  = google_project.project.project_id
-  name     = "${var.prefix}-${var.demo_name}-${var.env}" 
+  name     = "${var.prefix}-${var.demo_name}-${var.env}"
   location = var.region
 
   network    = google_compute_network.vpc-global.self_link
@@ -98,11 +98,11 @@ resource "google_container_cluster" "gke" {
 
 // TODO - Gary - What's the purpose of the internal and external node pool? I think I am missing something.
 resource "google_container_node_pool" "np-external" {
-  project     = google_project.project.project_id
-  name = "${var.prefix}-${var.demo_name}-${var.env}-np-ext"
+  project = google_project.project.project_id
+  name    = "${var.prefix}-${var.demo_name}-${var.env}-np-ext"
   //name_prefix = "${var.prefix}-${var.demo_name}-${var.env}-np-ext"
-  location    = var.region
-  cluster     = google_container_cluster.gke.name
+  location = var.region
+  cluster  = google_container_cluster.gke.name
 
   node_config {
     image_type   = "COS_CONTAINERD"
@@ -161,11 +161,11 @@ resource "google_container_node_pool" "np-external" {
 
 // Workload nodepool
 resource "google_container_node_pool" "np-internal" {
-  project     = google_project.project.project_id
-  name = "${var.prefix}-${var.demo_name}-${var.env}-np-wpl-1"
+  project = google_project.project.project_id
+  name    = "${var.prefix}-${var.demo_name}-${var.env}-np-wpl-1"
   //name_prefix = "${var.prefix}-${var.demo_name}-${var.env}-np-wpl-1"
-  location    = var.region
-  cluster     = google_container_cluster.gke.name
+  location = var.region
+  cluster  = google_container_cluster.gke.name
 
   node_config {
     image_type   = "COS_CONTAINERD"

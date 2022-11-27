@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket  = "time-keeper-tf-state-001"
-    prefix  = "terraform/state"
+    bucket = "tk-state-management-2048"
+    prefix = "terraform/state/environments"
   }
 }
