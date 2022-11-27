@@ -20,6 +20,8 @@ gcp-auth-step-0:
 gcp-auth-step-1:
   stage: gcp-auth 
   image: dwdraju/alpine-curl-jq
+  needs:
+   - job: gcp-auth-step-0
   script: 
    ./run_gcp_sts.sh
   artifacts:
@@ -30,6 +32,7 @@ gcp-auth-step-2:
   stage: gcp-auth
   image: hashicorp/terraform:light
   needs:
+   - job: gcp-auth-step-0
    - job: gcp-auth-step-1
   script: 
    - source $VARIABLES_FILE
@@ -41,6 +44,7 @@ v1-infra-core-automated-testing-step-0:
   stage: automated-testing
   image: hashicorp/terraform:light
   needs:
+    - job: gcp-auth-step-0
     - job: gcp-auth-step-1
     - job: gcp-auth-step-2
   script: 
@@ -52,16 +56,35 @@ v1-infra-core-automated-testing-step-1:
   stage: automated-testing
   image: hashicorp/terraform:light
   needs:
+    - job: gcp-auth-step-0
     - job: gcp-auth-step-1
     - job: gcp-auth-step-2
     - job: v1-infra-core-automated-testing-step-0
   script: 
    - source $VARIABLES_FILE
-   - echo "Hey... We Made it ... to the next stage!"
+   - echo "Hey... We Made it ... to the Planning stage!"
    - echo "${CLOUDSDK_AUTH_ACCESS_TOKEN}"
    - terraform --version
+   - export GOOGLE_CREDENTIALS="${CLOUDSDK_AUTH_ACCESS_TOKEN}"
    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
 
 
-
+v1-infra-core-automated-testing-step-2:
+  stage: automated-testing
+  image: hashicorp/terraform:light
+  needs:
+    - job: gcp-auth-step-0
+    - job: gcp-auth-step-1
+    - job: gcp-auth-step-2
+    - job: v1-infra-core-automated-testing-step-0
+    - job: v1-infra-core-automated-testing-step-1
+  script: 
+   - source $VARIABLES_FILE
+   - echo "Hey... We Made it ... to the Running stage!"
+   - echo "${CLOUDSDK_AUTH_ACCESS_TOKEN}"
+   - terraform --version
+   - export GOOGLE_CREDENTIALS="${CLOUDSDK_AUTH_ACCESS_TOKEN}"
+   - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
+   - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
+   #- terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" apply -auto-approve -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"

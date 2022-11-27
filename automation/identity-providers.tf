@@ -1,6 +1,7 @@
 locals {
   serviceAccountIAMRoles = [
     "roles/iam.serviceAccountUser",
+    "roles/storage.admin",
     //"roles/resourcemanager.organizationAdmin",
     //"roles/iam.workloadIdentityUser",
     //"roles/resourcemanager.projectCreator",
