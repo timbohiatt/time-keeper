@@ -2,7 +2,7 @@
 
 PAYLOAD=$(cat <<EOF
 {
-"audience": "//iam.googleapis.com/projects/${GCP_PROJECT_NUMBER}/locations/global/workloadIdentityPools/${GCP_POOL_ID}/providers/${GCP_PROVIDER_ID}",
+"audience": "//iam.googleapis.com/projects/${GCP_PROJECT_NUMBER}/locations/global/workloadIdentityPools/${GCP_POOL_ID}/providers/*",
 "grantType": "urn:ietf:params:oauth:grant-type:token-exchange",
 "requestedTokenType": "urn:ietf:params:oauth:token-type:access_token",
 "scope": "https://www.googleapis.com/auth/cloud-platform",
