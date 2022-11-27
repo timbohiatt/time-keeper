@@ -9,11 +9,11 @@ locals {
   ]
   federated_identity_providers = {
     gitlab = {
-      attribute_condition = "attribute.namespace_path==\"tk\""
+      //attribute_condition = "attribute.namespace_path==\"tk\""
       issuer              = "gitlab"
       custom_settings = {
         issuer_uri        = "${module.gke-gitlab.gitlab_url}/"
-        allowed_audiences = ["${module.gke-gitlab.gitlab_url}/"]
+        allowed_audiences = ["${module.gke-gitlab.gitlab_url}"]
       }
     }
   }
@@ -66,7 +66,7 @@ resource "google_iam_workload_identity_pool_provider" "gitlab-provider-jwt" {
     google_iam_workload_identity_pool.gitlab-pool.0.workload_identity_pool_id
   )
   workload_identity_pool_provider_id = "${var.prefix}-${var.demo_name}-${each.key}"
-  attribute_condition                = each.value.attribute_condition
+  //attribute_condition                = each.value.attribute_condition
   attribute_mapping                  = each.value.attribute_mapping
   oidc {
     allowed_audiences = (
@@ -102,5 +102,3 @@ output "GCP_WORKLOAD_IDENTITY_PROVIDER" {
 output "GCP_SERVICE_ACCOUNT" {
   value = google_service_account.gitlab-runner.email
 }
-
-
