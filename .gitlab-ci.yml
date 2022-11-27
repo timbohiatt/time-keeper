@@ -32,8 +32,8 @@ stages:
 v1-infra-core-automated-testing-step-0:
   stage: automated-testing
   needs:
-    - job: v1-auth-0
-      artifacts: true
+  #  - job: v1-auth-0
+  #    artifacts: true
   rules:
   - if: '$CI_PIPELINE_SOURCE == "push"'
   #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
@@ -42,7 +42,7 @@ v1-infra-core-automated-testing-step-0:
       - demos/v1-self-managed/time-keeper-gcp/**/* 
   image: google/cloud-sdk:slim
   script:
-    - echo "$GOOGLE_CLOUD_KEYFILE_JSON"
+  #  - echo "$GOOGLE_CLOUD_KEYFILE_JSON"
     - gcloud auth list
     - echo "Running AUTOMATED TESTING Environment for Core Infra!"
 
@@ -66,7 +66,7 @@ v1-infra-core-automated-testing-step-1:
       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   script: 
     - export TF_WORKSPACE="at"
-    - echo "$GOOGLE_CLOUD_KEYFILE_JSON"
+  #  - echo "$GOOGLE_CLOUD_KEYFILE_JSON"
     - terraform --version
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at"
