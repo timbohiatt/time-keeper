@@ -1,4 +1,12 @@
-gcp-auth:
+stages:
+  - gcp-auth
+  - automated-testing
+
+variables:
+  VARIABLES_FILE: ./variables.txt
+
+gcp-auth-step-0:
+  stage: gcp-auth
   image: google/cloud-sdk:slim
   script:
     - echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
@@ -9,22 +17,49 @@ gcp-auth:
     - gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
     - gcloud auth list
 
-gcp-sts:
+gcp-auth-step-1:
+  stage: gcp-auth 
   image: dwdraju/alpine-curl-jq
   script: 
    ./run_gcp_sts.sh
   artifacts:
-    reports:
-      dotenv: GOOGLE_CLOUD_KEYFILE_JSON.env
+    paths:
+      - $VARIABLES_FILE
 
-gcp-playback:
+gcp-auth-step-2:
+  stage: gcp-auth
   image: hashicorp/terraform:light
   needs:
-    - job: gcp-sts
-      artifacts: true
+   - job: gcp-auth-step-1
   script: 
+   - source $VARIABLES_FILE
    - echo "Hey... We Made it!"
    - echo "${CLOUDSDK_AUTH_ACCESS_TOKEN}"
+
+
+v1-infra-core-automated-testing-step-0:
+  stage: automated-testing
+  image: hashicorp/terraform:light
+  needs:
+    - job: gcp-auth-step-1
+    - job: gcp-auth-step-2
+  script: 
+   - source $VARIABLES_FILE
+   - echo "Hey... We Made it ... to the next stage!"
+   - echo "${CLOUDSDK_AUTH_ACCESS_TOKEN}"
+
+v1-infra-core-automated-testing-step-1:
+  stage: automated-testing
+  image: hashicorp/terraform:light
+  needs:
+    - job: v1-infra-core-automated-testing-step-0
+  script: 
+   - source $VARIABLES_FILE
+   - echo "Hey... We Made it ... to the next stage!"
+   - echo "${CLOUDSDK_AUTH_ACCESS_TOKEN}"
+   - terraform --version
+   - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
+   - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
 
 
 

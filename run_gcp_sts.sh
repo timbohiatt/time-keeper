@@ -27,4 +27,4 @@ ACCESS_TOKEN=$(curl -X POST "https://iamcredentials.googleapis.com/v1/projects/-
 | jq -r '.accessToken'
 )
 echo "${ACCESS_TOKEN}"
-echo "CLOUDSDK_AUTH_ACCESS_TOKEN=${ACCESS_TOKEN}" >> CLOUDSDK_AUTH_ACCESS_TOKEN.env
+echo "export CLOUDSDK_AUTH_ACCESS_TOKEN=${ACCESS_TOKEN}" > ${VARIABLES_FILE}
