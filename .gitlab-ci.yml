@@ -33,6 +33,7 @@ v1-infra-core-automated-testing-step-0:
     - job: "v1-auth-1"
       artifacts: true
   rules:
+  - if: '$CI_PIPELINE_SOURCE == "push"'
   #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
   #  when: on_success
     changes:
@@ -41,7 +42,6 @@ v1-infra-core-automated-testing-step-0:
   script:
     - gcloud auth list
     - echo "Running AUTOMATED TESTING Environment for Core Infra!"
-    - echo "Cloud Access Token - ${CLOUDSDK_AUTH_ACCESS_TOKEN}"
 
 
 
