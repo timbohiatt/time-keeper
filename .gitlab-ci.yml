@@ -23,7 +23,7 @@ v1-auth-0:
       --credential-source-file=.ci_job_jwt_file
     - gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
     - rm -rf .terraform
-    - echo "GOOGLE_CLOUD_KEYFILE_JSON=$'{pwd}/.gcp_temp_cred.json'" >> GOOGLE_CLOUD_KEYFILE_JSON.env
+    - echo "GOOGLE_CLOUD_KEYFILE_JSON='${PWD}/.gcp_temp_cred.json'" >> GOOGLE_CLOUD_KEYFILE_JSON.env
   artifacts:
     reports:
       dotenv: GOOGLE_CLOUD_KEYFILE_JSON.env
