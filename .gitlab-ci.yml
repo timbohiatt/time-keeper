@@ -1,22 +1,24 @@
 stages:
-  - gcp-auth
+#  - gcp-auth
   - automated-testing
 
-gcp-auth-step-0:
-  stage: gcp-auth
-  image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
-  script:
-    - terraform --version
-    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
-    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
+#gcp-auth-step-0:
+#  stage: gcp-auth
+#  image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
+#  script:
+#    - terraform --version
+#    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
+#    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
 
 v1-infra-core-automated-testing-step-0:
   stage: automated-testing
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
   script:
+    - export TF_WORKSPACE=at
     - terraform --version
+    - terraform workspace new $TF_WORKSPACE || true
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
-    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=$TF_WORKSPACE" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
 
 v1-infra-core-automated-testing-step-1:
   stage: automated-testing
@@ -24,6 +26,8 @@ v1-infra-core-automated-testing-step-1:
     - job: v1-infra-core-automated-testing-step-0
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
   script:
+    - export TF_WORKSPACE=at
     - terraform --version
+    - terraform workspace select $TF_WORKSPACE
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
-    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" apply -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'" -auto-approve
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" apply -var="env=$TF_WORKSPACE" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'" -auto-approve
