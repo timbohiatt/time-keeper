@@ -35,6 +35,7 @@ v1-infra-core-automated-testing-step-2:
   stage: automated-testing
   needs:
     - job: v1-infra-core-automated-testing-step-1
+      artifacts: true
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
   script:
     - gcloud container clusters get-credentials ${GKE_CLUSTER_NAME} --region="${GKE_CLUSTER_REGION}" --project="${GKE_CLUSTER_PROJECT}"
@@ -69,6 +70,7 @@ v1-infra-core-integration-step-2:
   stage: integration
   needs:
     - job: v1-infra-core-integration-step-1
+      artifacts: true
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
   script:
     - gcloud container clusters get-credentials ${GKE_CLUSTER_NAME} --region="${GKE_CLUSTER_REGION}" --project="${GKE_CLUSTER_PROJECT}"

@@ -65,7 +65,10 @@ resource "google_container_cluster" "gke" {
   }
 
   master_authorized_networks_config {
-
+    cidr_blocks {
+        cidr_block   = "0.0.0.0/0"
+        display_name = "all"
+    }
   }
 
   ip_allocation_policy {
@@ -85,7 +88,7 @@ resource "google_container_cluster" "gke" {
   //resource_labels = var.cluster_labels
 
   lifecycle {
-    ignore_changes = [master_auth, node_config[0]]
+    ignore_changes = [master_auth, node_config]
   }
 
   timeouts {
