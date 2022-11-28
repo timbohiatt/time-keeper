@@ -24,6 +24,8 @@ locals {
     "iamcredentials.googleapis.com",
     "sts.googleapis.com",
     "servicenetworking.googleapis.com",
+    "cloudbilling.googleapis.com",
+    "serviceusage.googleapis.com",
   ]
 }
 
@@ -49,7 +51,6 @@ resource "google_project_service" "project_apis" {
   disable_on_destroy         = true
 }
 
-
 module "gke-gitlab" {
   source                     = "./terraform-google-gke-gitlab"
   project_id                 = google_project.project.project_id
@@ -59,3 +60,18 @@ module "gke-gitlab" {
   helm_chart_version         = "6.6.0"
   runner_service_account_name= google_service_account.gitlab_service_account.email
 }
+
+
+resource "google_billing_account_iam_binding" "binding" {
+  billing_account_id = var.billing_account
+  role               = "roles/billing.user"
+  members = [
+    google_service_account.gitlab_service_account.member
+  ]
+}
+
+
+##
+# Service Account Needs:
+# ProjectCreator @ Folder Level
+#
