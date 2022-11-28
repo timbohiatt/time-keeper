@@ -7,7 +7,7 @@ variables:
 
 gcp-auth-step-0:
   stage: gcp-auth
-  image: gcr.io/tk-automation-9776/time-keeper-cicd:v1.0
+  image: gcr.io/tk-automation-9776/time-keeper-cicd:v1.1
   script:
     - echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
     - gcloud iam workload-identity-pools create-cred-config ${WORKLOAD_IDENTITY_PROVIDER}
