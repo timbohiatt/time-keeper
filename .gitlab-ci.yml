@@ -18,6 +18,9 @@ gcp-auth-step-0:
     - gcloud auth list
     - gcloud container clusters list --project="tk-v1-lcl-8688"
     - gcloud container clusters list --project="tk-automation-9776"
+    - ./run_gcp_sts.sh
+    - echo ${CLOUDSDK_AUTH_ACCESS_TOKEN}
+    - gcloud auth list
     - terraform --version
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
