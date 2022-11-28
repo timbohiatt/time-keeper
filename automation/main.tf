@@ -23,6 +23,7 @@ locals {
     "cloudresourcemanager.googleapis.com",
     "iamcredentials.googleapis.com",
     "sts.googleapis.com",
+    "servicenetworking.googleapis.com",
   ]
 }
 

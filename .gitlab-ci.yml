@@ -14,13 +14,13 @@ gcp-auth-step-0:
     - echo "${POOL_ID}"
     - echo "${PROVIDER_ID}"
     - echo "${PROJECT_NUMBER}"
-    - echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
-    - gcloud iam workload-identity-pools create-cred-config ${WORKLOAD_IDENTITY_PROVIDER}
-      --service-account="${SERVICE_ACCOUNT_EMAIL}"
-      --output-file=.gcp_temp_cred.json
-      --credential-source-file=.ci_job_jwt_file
-    - gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
-    #- gcloud auth list
+    #- echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
+    #- gcloud iam workload-identity-pools create-cred-config ${WORKLOAD_IDENTITY_PROVIDER}
+    #  --service-account="${SERVICE_ACCOUNT_EMAIL}"
+    #  --output-file=.gcp_temp_cred.json
+    #  --credential-source-file=.ci_job_jwt_file
+    #- gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
+    - gcloud auth list
     #- gcloud container clusters list --project="tk-v1-lcl-8688"
     #- gcloud container clusters list --project="tk-automation-9776"
     #- gcloud auth application-default login --client-id-file=.gcp_temp_cred.json --quiet

@@ -16,7 +16,7 @@
 
 locals {
   services = [
-    //"servicenetworking.googleapis.com",
+    "servicenetworking.googleapis.com",
     //"dns.googleapis.com",
     "iap.googleapis.com",
     //"stackdriver.googleapis.com",
