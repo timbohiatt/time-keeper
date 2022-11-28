@@ -7,7 +7,7 @@ variables:
 
 gcp-auth-step-0:
   stage: gcp-auth
-  image: gcr.io/tk-automation-9776/time-keeper-cicd:v1.1
+  image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
   script:
     - echo "${WORKLOAD_IDENTITY_PROVIDER}"
     - echo "${SERVICE_ACCOUNT_EMAIL}"
