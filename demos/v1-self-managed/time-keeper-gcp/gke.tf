@@ -65,7 +65,7 @@ resource "google_container_cluster" "gke" {
   }
 
   master_authorized_networks_config {
-    
+
   }
 
   ip_allocation_policy {
@@ -154,10 +154,6 @@ resource "google_container_node_pool" "np-external" {
     delete = "2h"
   }
 
-  lifecycle {
-    create_before_destroy = true
-  }
-
 }
 
 // Workload nodepool
@@ -215,9 +211,4 @@ resource "google_container_node_pool" "np-internal" {
     update = "40m"
     delete = "2h"
   }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
 }
