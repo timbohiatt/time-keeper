@@ -8,7 +8,7 @@ v1-infra-core-automated-testing-step-0:
     - terraform --version
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
     - terraform workspace select at || terraform workspace new at
-    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}"
 
 v1-infra-core-automated-testing-step-1:
   stage: automated-testing
@@ -19,4 +19,4 @@ v1-infra-core-automated-testing-step-1:
     - terraform --version
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
     - terraform workspace select at || terraform workspace new at
-    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" apply -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'" -auto-approve
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" apply -var="env=at" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}" -auto-approve
