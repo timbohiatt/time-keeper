@@ -14,43 +14,28 @@
  * limitations under the License.
  */
 
+
+
 locals {
-  services = [
-    "servicenetworking.googleapis.com",
-    "cloudbilling.googleapis.com",
-    "iap.googleapis.com",
-    //"stackdriver.googleapis.com",
-    //"cloudresourcemanager.googleapis.com",
-    //"storage-component.googleapis.com",
-    "containerregistry.googleapis.com",
-    "container.googleapis.com",
-    "compute.googleapis.com",
-    //"gkehub.googleapis.com",
-    //"mesh.googleapis.com",
-  ]
+  env_okd = "okd"
 }
 
-resource "random_integer" "salt" {
-  min = 0001
-  max = 9999
-}
-
-/*resource "google_folder" "folder" {
-  parent       = var.folder_id
-  display_name = "${var.prefix}-${var.demo_name}-${var.env}"
-}*/
-
-resource "google_project" "project" {
-  folder_id = var.folder_id
-  //folder_id           = google_folder.folder.folder_id
-  name                = "${var.prefix}-${var.demo_name}-${var.env}"
-  project_id          = "${var.prefix}-${var.demo_name}-${var.env}-${random_integer.salt.result}"
+resource "google_project" "project_okd" {
+  folder_id           = google_folder.parent_folder.folder_id
+  name                = "${var.prefix}-${var.demo_name}-${local.env_okd}"
+  project_id          = "${var.prefix}-${var.demo_name}-${local.env_okd}-${random_integer.salt.result}"
   billing_account     = var.billing_account
-  auto_create_network = false
+  auto_create_network = true
 }
 
-resource "google_project_service" "project_apis" {
-  project = google_project.project.project_id
+data "google_project" "project_okd" {
+  project_id = google_project.project_okd.project_id
+}
+
+data "google_client_config" "default_okd" {}
+
+resource "google_project_service" "project_apis_okd" {
+  project = google_project.project_okd.project_id
   count   = length(local.services)
   service = element(local.services, count.index)
 

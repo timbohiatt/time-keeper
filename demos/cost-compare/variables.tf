@@ -25,3 +25,11 @@ variable "billing_account" {
 variable "region" {
   type = string
 }
+
+variable "folder_id" {
+  type = string
+}
+
+variable "demo_name" {
+  type = string
+}
