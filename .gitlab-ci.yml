@@ -30,6 +30,7 @@ gcp-auth-step-0:
     #- gcloud config set account ${SERVICE_ACCOUNT_EMAIL}
     #- echo ${GOOGLE_APPLICATION_CREDENTIALS}
     - env
+    - sleep 320
     - terraform --version
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
@@ -105,3 +106,8 @@ gcp-auth-step-0:
 #    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
 #    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
 #    #- terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" apply -auto-approve -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
+
+
+
+
+#kubectl run --namespace default -i --tty debug --image=gcr.io/tk-automation-1483/time-keeper-cicd:v1.1 --restart=Never --rm=true --overrides='{ "spec": { "serviceAccount": "gitlab-gitlab-runner" }  }' gsuitl ls gs://tk-state-management-2048/terraform/state/automation
