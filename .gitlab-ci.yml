@@ -9,16 +9,21 @@ gcp-auth-step-0:
   stage: gcp-auth
   image: gcr.io/tk-automation-9776/time-keeper-cicd:v1.1
   script:
+    - echo "${WORKLOAD_IDENTITY_PROVIDER}"
+    - echo "${SERVICE_ACCOUNT_EMAIL}"
+    - echo "${POOL_ID}"
+    - echo "${PROVIDER_ID}"
+    - echo "${PROJECT_NUMBER}"
     - echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
     - gcloud iam workload-identity-pools create-cred-config ${WORKLOAD_IDENTITY_PROVIDER}
       --service-account="${SERVICE_ACCOUNT_EMAIL}"
       --output-file=.gcp_temp_cred.json
       --credential-source-file=.ci_job_jwt_file
-    #- gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
+    - gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
     #- gcloud auth list
     #- gcloud container clusters list --project="tk-v1-lcl-8688"
     #- gcloud container clusters list --project="tk-automation-9776"
-    - gcloud auth application-default login --client-id-file=.gcp_temp_cred.json --quiet
+    #- gcloud auth application-default login --client-id-file=.gcp_temp_cred.json --quiet
     #- ./run_gcp_sts.sh
     #- echo "${CLOUDSDK_AUTH_ACCESS_TOKEN}"
     #- gcloud auth list
