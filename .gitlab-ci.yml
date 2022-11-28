@@ -16,8 +16,8 @@ v1-infra-core-automated-testing-step-0:
   script:
     - export TF_WORKSPACE=at
     - terraform --version
-    - terraform workspace new $TF_WORKSPACE || true
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
+    - terraform workspace new $TF_WORKSPACE || true
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=$TF_WORKSPACE" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
 
 v1-infra-core-automated-testing-step-1:
@@ -26,7 +26,7 @@ v1-infra-core-automated-testing-step-1:
     - job: v1-infra-core-automated-testing-step-0
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
   script:
-    - export TF_WORKSPACE=at
     - terraform --version
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
+    - export TF_WORKSPACE=at
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" apply -var="env=$TF_WORKSPACE" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'" -auto-approve
