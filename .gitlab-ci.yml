@@ -2,117 +2,28 @@ stages:
   - gcp-auth
   - automated-testing
 
-variables:
-  VARIABLES_FILE: ./variables.txt
-
 gcp-auth-step-0:
   stage: gcp-auth
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
   script:
-    - echo "${WORKLOAD_IDENTITY_PROVIDER}"
-    - echo "${SERVICE_ACCOUNT_EMAIL}"
-    - echo "${POOL_ID}"
-    - echo "${PROVIDER_ID}"
-    - echo "${PROJECT_NUMBER}"
-    #- echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
-    #- gcloud iam workload-identity-pools create-cred-config ${WORKLOAD_IDENTITY_PROVIDER}
-    #  --service-account="${SERVICE_ACCOUNT_EMAIL}"
-    #  --output-file=.gcp_temp_cred.json
-    #  --credential-source-file=.ci_job_jwt_file
-    #- gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
-    - gcloud auth list
-    #- gcloud container clusters list --project="tk-v1-lcl-8688"
-    #- gcloud container clusters list --project="tk-automation-9776"
-    #- gcloud auth application-default login --client-id-file=.gcp_temp_cred.json --quiet
-    #- ./run_gcp_sts.sh
-    #- echo "${CLOUDSDK_AUTH_ACCESS_TOKEN}"
-    #- gcloud auth list
-    #- gcloud config set account ${SERVICE_ACCOUNT_EMAIL}
-    #- echo ${GOOGLE_APPLICATION_CREDENTIALS}
-    - env
     - terraform --version
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
 
-# gcp-auth-step-1:
-#   stage: gcp-auth 
-#   image: dwdraju/alpine-curl-jq
-#   needs:
-#    - job: gcp-auth-step-0
-#   script: 
-#    ./run_gcp_sts.sh
-#   artifacts:
-#     paths:
-#       - $VARIABLES_FILE
+v1-infra-core-automated-testing-step-0:
+  stage: automated-testing
+  image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
+  script:
+    - terraform --version
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
 
-# gcp-auth-step-2:
-#   stage: gcp-auth
-#   image: hashicorp/terraform:light
-#   needs:
-#    - job: gcp-auth-step-0
-#    - job: gcp-auth-step-1
-#   script: 
-#    - source $VARIABLES_FILE
-#    - echo "Hey... We Made it!"
-#    - echo "${CLOUDSDK_AUTH_ACCESS_TOKEN}"
-
-
-# v1-infra-core-automated-testing-step-0:
-#   stage: automated-testing
-#   image: hashicorp/terraform:light
-#   needs:
-#     - job: gcp-auth-step-0
-#     - job: gcp-auth-step-1
-#     - job: gcp-auth-step-2
-#   script: 
-#    - source $VARIABLES_FILE
-#    - echo "Hey... We Made it ... to the next stage!"
-#    - echo "${CLOUDSDK_AUTH_ACCESS_TOKEN}"
-
-# v1-infra-core-automated-testing-step-1:
-#   stage: automated-testing
-#   image: hashicorp/terraform:light
-#   needs:
-#     - job: gcp-auth-step-0
-#     - job: gcp-auth-step-1
-#     - job: gcp-auth-step-2
-#     - job: v1-infra-core-automated-testing-step-0
-#   script: 
-#    - source $VARIABLES_FILE
-#    - echo "Hey... We Made it ... to the Planning stage!"
-#    - echo "${CLOUDSDK_AUTH_ACCESS_TOKEN}"
-#    - terraform --version
-#    - export GOOGLE_CREDENTIALS="${CLOUDSDK_AUTH_ACCESS_TOKEN}"
-#    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
-#    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
-
-
-# v1-infra-core-automated-testing-step-2:
-#   stage: automated-testing
-#   image: hashicorp/terraform:light
-#   needs:
-#     - job: gcp-auth-step-0
-#     - job: gcp-auth-step-1
-#     - job: gcp-auth-step-2
-#     - job: v1-infra-core-automated-testing-step-0
-#     - job: v1-infra-core-automated-testing-step-1
-#   script: 
-#    - source $VARIABLES_FILE
-#    - echo "Hey... We Made it ... to the Running stage!"
-#    - echo "${CLOUDSDK_AUTH_ACCESS_TOKEN}"
-#    - terraform --version
-#    - export GOOGLE_CREDENTIALS="${CLOUDSDK_AUTH_ACCESS_TOKEN}"
-#    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
-#    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
-#    #- terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" apply -auto-approve -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
-
-
-
-
-#kubectl run --namespace default -i --tty debug --image=gcr.io/tk-automation-1483/time-keeper-cicd:v1.1 --restart=Never --rm=true --overrides='{ "spec": { "serviceAccount": "gitlab-gitlab-runner" }  }' gsuitl ls gs://tk-state-management-2048/terraform/state/automation
-
-
-
-gcloud iam service-accounts add-iam-policy-binding tk-automation-gitlab@tk-automation-1483.iam.gserviceaccount.com \
-    --role roles/iam.workloadIdentityUser \
-    --member "serviceAccount:tk-automation-1483.svc.id.goog[default/default]"
+v1-infra-core-automated-testing-step-1:
+  stage: automated-testing
+  needs:
+    - job: v1-infra-core-automated-testing-step-0
+  image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
+  script:
+    - terraform --version
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" apply -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'" -auto-approve
