@@ -21,6 +21,7 @@ gcp-auth-step-0:
     - ./run_gcp_sts.sh
     - echo ${CLOUDSDK_AUTH_ACCESS_TOKEN}
     - gcloud auth list
+    - gcloud config set account ${SERVICE_ACCOUNT_EMAIL}
     - terraform --version
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
