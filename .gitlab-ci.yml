@@ -7,7 +7,7 @@ variables:
 
 gcp-auth-step-0:
   stage: gcp-auth
-  image: google/cloud-sdk:slim
+  image: gcr.io/tk-automation-9776/time-keeper-cicd:v1.0
   script:
     - echo ${CI_JOB_JWT_V2} > .ci_job_jwt_file
     - gcloud iam workload-identity-pools create-cred-config ${WORKLOAD_IDENTITY_PROVIDER}
@@ -17,6 +17,10 @@ gcp-auth-step-0:
     - gcloud auth login --cred-file=`pwd`/.gcp_temp_cred.json
     - gcloud auth list
     - gcloud container clusters list --project="tk-v1-lcl-8688"
+    - gcloud container clusters list --project="tk-automation-9776"
+    - terraform --version
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail='${SERVICE_ACCOUNT_EMAIL}'"
 
 # gcp-auth-step-1:
 #   stage: gcp-auth 
