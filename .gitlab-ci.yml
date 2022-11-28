@@ -24,6 +24,12 @@ v1-infra-core-automated-testing-step-1:
     - terraform --version
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init -backend-config="prefix=terraform/state/environments/at"
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" apply -var="env=at" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}" -auto-approve
+    - echo GKE_CLUSTER_NAME=$(terraform output -raw GKE_CLUSTER_NAME) >> build.env
+    - echo GKE_CLUSTER_REGION=$(terraform output -raw GKE_CLUSTER_REGION) >> build.env
+    - echo GKE_CLUSTER_PROJECT=$(terraform output -raw GKE_CLUSTER_PROJECT) >> build.env
+  artifacts: 
+    reports:
+      dotenv: build.env
 
 v1-infra-core-automated-testing-step-2:
   stage: automated-testing
@@ -31,7 +37,7 @@ v1-infra-core-automated-testing-step-2:
     - job: v1-infra-core-automated-testing-step-1
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
   script:
-    - gcloud container clusters get-credentials tk-v1-at --region="europe-west6" --project="tk-v1-at-212"
+    - gcloud container clusters get-credentials ${GKE_CLUSTER_NAME} --region="${GKE_CLUSTER_REGION}" --project="${GKE_CLUSTER_PROJECT}"
     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/namespace.yaml
     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml
 
@@ -59,12 +65,12 @@ v1-infra-core-integration-step-1:
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init -backend-config="prefix=terraform/state/environments/int"
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" apply -var="env=int" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}" -auto-approve
 
-#v1-infra-core-integration-step-2:
-#  stage: integration
-#  needs:
-#    - job: v1-infra-core-integration-step-1
-#  image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
-#  script:
-#    - gcloud container clusters get-credentials tk-v1-at --region="europe-west6" --project="tk-v1-int-212"
-#    - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/namespace.yaml
-#    - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml
+v1-infra-core-integration-step-2:
+  stage: integration
+  needs:
+    - job: v1-infra-core-integration-step-1
+  image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
+  script:
+    - gcloud container clusters get-credentials ${GKE_CLUSTER_NAME} --region="${GKE_CLUSTER_REGION}" --project="${GKE_CLUSTER_PROJECT}"
+    - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/namespace.yaml
+    - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml
