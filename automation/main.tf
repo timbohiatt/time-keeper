@@ -57,5 +57,5 @@ module "gke-gitlab" {
   gitlab_deletion_protection = false
   gitlab_db_random_prefix    = true
   helm_chart_version         = "6.6.0"
-  runner_service_account_name="default"
+  runner_service_account_name= google_service_account.gitlab_service_account.email
 }

@@ -71,6 +71,8 @@ resource "google_service_account_iam_binding" "gitlab_service_account_iam_bindin
   role               = "roles/iam.workloadIdentityUser"
 
   members = [
+    "serviceAccount:${google_project.project.project_id}.svc.id.goog[default/gitlab-gitlab-runner]",
+    "serviceAccount:${google_project.project.project_id}.svc.id.goog[default/default]",
     "principalSet://iam.googleapis.com/projects/${google_project.project.number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.gitlab_identity_pool.workload_identity_pool_id}/*",
   ]
 }

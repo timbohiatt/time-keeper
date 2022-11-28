@@ -110,3 +110,9 @@ gcp-auth-step-0:
 
 
 #kubectl run --namespace default -i --tty debug --image=gcr.io/tk-automation-1483/time-keeper-cicd:v1.1 --restart=Never --rm=true --overrides='{ "spec": { "serviceAccount": "gitlab-gitlab-runner" }  }' gsuitl ls gs://tk-state-management-2048/terraform/state/automation
+
+
+
+gcloud iam service-accounts add-iam-policy-binding tk-automation-gitlab@tk-automation-1483.iam.gserviceaccount.com \
+    --role roles/iam.workloadIdentityUser \
+    --member "serviceAccount:tk-automation-1483.svc.id.goog[default/default]"
