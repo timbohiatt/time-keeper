@@ -6,8 +6,8 @@ v1-infra-core-automated-testing-step-0:
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
   script:
     - terraform --version
-    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
-    - terraform workspace select at || terraform workspace new at
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init -backend-config="prefix=terraform/state/environments/at"
+    #- terraform workspace select at || terraform workspace new at
     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=at" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}"
 
 v1-infra-core-automated-testing-step-1:
@@ -17,6 +17,6 @@ v1-infra-core-automated-testing-step-1:
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
   script:
     - terraform --version
-    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init
-    - terraform workspace select at || terraform workspace new at
-    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" apply -var="env=at" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}" -auto-approve
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init -backend-config="prefix=terraform/state/environments/at"
+    #- terraform workspace select at || terraform workspace new at
+    - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" apply -backend-config="prefix=terraform/state/environments/at" -var="env=at" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}" -auto-approve
