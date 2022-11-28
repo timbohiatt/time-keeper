@@ -26,6 +26,6 @@ ACCESS_TOKEN=$(curl -X POST "https://iamcredentials.googleapis.com/v1/projects/-
 --data '{"scope": ["https://www.googleapis.com/auth/cloud-platform"]}' \
 | jq -r '.accessToken'
 )
-echo "${ACCESS_TOKEN}"
+
 echo "export CLOUDSDK_AUTH_ACCESS_TOKEN=${ACCESS_TOKEN}" > ${VARIABLES_FILE}
 echo "export CLOUDSDK_AUTH_ACCESS_TOKEN=${ACCESS_TOKEN}"
