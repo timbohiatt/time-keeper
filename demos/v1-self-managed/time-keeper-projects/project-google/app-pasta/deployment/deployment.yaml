@@ -50,7 +50,7 @@ spec:
   gateways:
   - ingress-gateway.istio-system.svc.cluster.local
   hosts: 
-  - time-keeper.watch
+  - app-pasta.app-pasta.svc.cluster.local
   http:
   - match: 
     - uri:
