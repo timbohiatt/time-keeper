@@ -60,7 +60,7 @@ v1-infra-core-automated-testing-step-2:
 
 
 #
-# Break into Ops Pipeline
+# Break into Ops & Developers Pipeline
 #
 v1-infra-core-automated-testing-step-3:
   stage: automated-testing
