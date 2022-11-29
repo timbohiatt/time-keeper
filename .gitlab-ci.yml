@@ -77,9 +77,10 @@ v1-infra-core-automated-testing-step-3:
     - echo "$GKE_CLUSTER_NAME"
     - gcloud container clusters get-credentials ${GKE_CLUSTER_NAME} --region="${GKE_CLUSTER_REGION}" --project="${GKE_CLUSTER_PROJECT}"
     # Deploy Ops Manifests
-    - kubectl apply -f demos/v1-self-managed/time-keeper-ops/manifests/namespaces
+    - kubectl apply -f demos/v1-self-managed/time-keeper-ops/manifests/namespaces --recursive
+    - kubectl apply -f demos/v1-self-managed/time-keeper-ops/manifests/ --recursive
     # Deploy Dev Team Deployments
-    - kubectl apply -f demos/v1-self-managed/time-keeper-projects/project-google/app-pasta/deployment
+    - kubectl apply -f demos/v1-self-managed/time-keeper-projects/project-google/app-pasta/deployment --recursive
 
 
 ##
