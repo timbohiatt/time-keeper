@@ -56,6 +56,7 @@ resource "google_container_cluster" "primary_gke" {
   enable_autopilot = false
   initial_node_count = 1
   node_config {
+    machine_type = "e2-standard-4"
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
     service_account = google_service_account.default_gke.email
     oauth_scopes = [
