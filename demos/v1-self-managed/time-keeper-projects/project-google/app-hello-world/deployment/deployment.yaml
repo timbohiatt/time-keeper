@@ -2,24 +2,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-pasta
-  namespace: app-pasta
+  name: app-helloworld
+  namespace: app-helloworld
   labels:
     project: google
-    app: pasta
+    app: helloworld
     cost-center: google-0001
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: pasta
+      app: helloworld
   template:
     metadata:
       labels:
-        app: pasta
+        app: helloworld
     spec:
       containers:
-      - name: app-pasta
+      - name: app-helloworld
         image: gcr.io/cloudrun/hello
         ports:
         - containerPort: 8080
@@ -27,15 +27,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: app-pasta
-  namespace: app-pasta
+  name: app-helloworld
+  namespace: app-helloworld
   labels:
     project: google
-    app: pasta
+    app: helloworld
     cost-center: google-0001
 spec: 
   selector: 
-    app: pasta
+    app: helloworld
   ports: 
   - name: http
     port: 8080
@@ -44,8 +44,8 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: app-pasta
-  namespace: app-pasta
+  name: app-helloworld
+  namespace: app-helloworld
 spec: 
   gateways:
   - istio-system/ingress-gateway
@@ -54,10 +54,10 @@ spec:
   http:
   - match:
     - uri:
-        prefix: /pasta
+        prefix: /hello
     route: 
     - destination: 
-        host: app-pasta.app-pasta.svc.cluster.local
+        host: app-helloworld.app-helloworld.svc.cluster.local
         port: 
           number: 8080
 
