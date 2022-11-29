@@ -8,11 +8,11 @@ spec:
   gateways:
   - istio-system/ingress-gateway
   hosts: 
-  - "*"
+  - "bank.time-keeper.watch"
   http:
   - match:
     - uri:
-        prefix: /bank
+        prefix: "/"
     route: 
     - destination: 
         host: frontend
