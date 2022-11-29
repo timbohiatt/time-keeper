@@ -14,6 +14,7 @@ locals {
     "mesh.googleapis.com",
     "meshconfig.googleapis.com",
     "meshtelemetry.googleapis.com",
+    "run.googleapis.com",
   ]
 }
 

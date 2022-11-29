@@ -55,7 +55,8 @@ v1-infra-core-automated-testing-step-2:
     - echo "$GKE_CLUSTER_NAME"
     - gcloud container clusters get-credentials ${GKE_CLUSTER_NAME} --region="${GKE_CLUSTER_REGION}" --project="${GKE_CLUSTER_PROJECT}"
     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/namespace.yaml
-    - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml
+    - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml || true
+    - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml || true
 
 
 
@@ -107,7 +108,8 @@ v1-infra-core-automated-testing-step-2:
 #     - echo "$GKE_CLUSTER_NAME"
 #     - gcloud container clusters get-credentials ${GKE_CLUSTER_NAME} --region="${GKE_CLUSTER_REGION}" --project="${GKE_CLUSTER_PROJECT}"
 #     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/namespace.yaml
-#     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml
+#     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml || true
+#     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml || true
 
 
 ##
@@ -158,7 +160,8 @@ v1-infra-core-automated-testing-step-2:
 #     - echo "$GKE_CLUSTER_NAME"
 #     - gcloud container clusters get-credentials ${GKE_CLUSTER_NAME} --region="${GKE_CLUSTER_REGION}" --project="${GKE_CLUSTER_PROJECT}"
 #     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/namespace.yaml
-#     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml
+#     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml || true
+#     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml || true
 
 
 #===========================================================================================================================
