@@ -55,6 +55,9 @@ resource "google_container_cluster" "primary_gke" {
   location           = var.region
   enable_autopilot = false
   initial_node_count = 1
+  cost_management_config {
+    enabled = true
+  }
   node_config {
     machine_type = "e2-standard-4"
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.

@@ -23,6 +23,10 @@ resource "google_container_cluster" "gke" {
     //mesh_id = "proj-${google_project.project.number}",
   }
 
+  cost_management_config {
+    enabled = true
+  }
+
   master_auth {
     // Disable login auth to the cluster
     //username = ""

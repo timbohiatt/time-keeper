@@ -41,7 +41,7 @@ spec:
     port: 80
     protocol: TCP
 ---
-apiVersion: networking.istio.io/v1Alpha3
+apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: app-pasta
