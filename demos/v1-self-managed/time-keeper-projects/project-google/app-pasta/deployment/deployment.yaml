@@ -40,4 +40,23 @@ spec:
   - name: http
     port: 80
     protocol: TCP
+---
+apiVersion: networking.istio.io/v1Alpha3
+kind: VirtualService
+metadata:
+  name: app-pasta
+  namespace: istio-system
+spec: 
+  gateways:
+  - ingress-gateway
+  hosts: 
+  - time-keeper.watch
+  http:
+  - match: 
+    - uri:
+        prefix: /pasta
+    route: 
+    - destination: 
+        host: app-pasta.app-pasta.svc.cluster.local
+        port: 80
 
