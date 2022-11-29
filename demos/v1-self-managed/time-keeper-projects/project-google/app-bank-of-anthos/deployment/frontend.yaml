@@ -143,7 +143,6 @@ metadata:
   namespace: app-bank-of-anthos
   name: frontend
 spec:
-  type: LoadBalancer
   selector:
     app: frontend
   ports:
