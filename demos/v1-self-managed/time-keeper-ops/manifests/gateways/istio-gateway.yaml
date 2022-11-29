@@ -14,3 +14,4 @@ spec:
       protocol: HTTP
     hosts:
     - time-keeper.watch 
+    - bank.time-keeper.watch
