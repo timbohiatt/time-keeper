@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: app-pasta
-        image: gcr.io/google-samples/node-hello:1.0
+        image: gcr.io/cloudrun/hello
         ports:
         - containerPort: 80
 ---
