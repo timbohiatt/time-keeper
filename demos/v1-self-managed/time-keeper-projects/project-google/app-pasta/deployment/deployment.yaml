@@ -50,7 +50,7 @@ spec:
   gateways:
   - istio-system/ingress-gateway
   hosts: 
-  - time-keeper.watch
+  - v1.time-keeper.watch
   http:
   - match:
     - uri:

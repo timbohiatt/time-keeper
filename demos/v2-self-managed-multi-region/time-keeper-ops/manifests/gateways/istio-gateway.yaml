@@ -13,6 +13,6 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - time-keeper.watch 
-    - bank.time-keeper.watch
-    - bookinfo.time-keeper.watch
+    - v2.time-keeper.watch 
+    - bank.v2.time-keeper.watch
+    - bookinfo.v2.time-keeper.watch

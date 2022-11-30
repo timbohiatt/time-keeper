@@ -4,8 +4,8 @@ metadata:
   name: "auth0"
 spec:
   jwtRules:
-  - issuer: "http://bookinfo.time-keeper.watch/"
-    jwksUri: "https://bookinfo.time-keeper.watch/.well-known/jwks.json"
+  - issuer: "http://bookinfo.v1.time-keeper.watch/"
+    jwksUri: "https://bookinfo.v1.time-keeper.watch/.well-known/jwks.json"
 ---
 apiVersion: "security.istio.io/v1beta1"
 kind: "AuthorizationPolicy"

@@ -8,7 +8,7 @@ spec:
   gateways:
   - istio-system/ingress-gateway
   hosts: 
-  - "bank.time-keeper.watch"
+  - "bank.v1.time-keeper.watch"
   http:
   - match:
     - uri:

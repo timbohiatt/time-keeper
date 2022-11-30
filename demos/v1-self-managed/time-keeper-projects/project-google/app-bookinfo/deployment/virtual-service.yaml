@@ -7,7 +7,7 @@ spec:
   gateways:
   - istio-system/ingress-gateway
   hosts: 
-  - "bookinfo.time-keeper.watch"
+  - "bookinfo.v1.time-keeper.watch"
   http:
   - match:
     - uri:
