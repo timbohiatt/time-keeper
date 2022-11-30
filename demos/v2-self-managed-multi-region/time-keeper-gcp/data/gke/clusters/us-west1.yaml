@@ -1,4 +1,4 @@
-enabled: fale
+enabled: false
 
 # GKE Cluster Name 
 # cluster_name: 
