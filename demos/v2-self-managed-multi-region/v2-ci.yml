@@ -15,8 +15,8 @@ v2-infra-core-automated-testing-step-0:
     - if: '$CI_PIPELINE_SOURCE == "push"'
     #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
       when: on_success
-      changes:
-        - /**/*
+      #changes:
+        #- /**/*
   variables:
     TK_ENV: "at"
   script:
@@ -33,8 +33,8 @@ v2-infra-core-automated-testing-step-1:
     - if: '$CI_PIPELINE_SOURCE == "push"'
       #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
       when: on_success
-      changes:
-        - /**/*
+      #changes:
+        #- /**/*
   variables:
     TK_ENV: "at"
   script:
@@ -57,8 +57,8 @@ v2-infra-core-automated-testing-step-2:
     - if: '$CI_PIPELINE_SOURCE == "push"'
       #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
       when: on_success
-      changes:
-        - /**/*
+      #changes:
+        #- /**/*
   variables:
     TK_ENV: "at"
   script:
@@ -78,8 +78,8 @@ v2-infra-core-automated-testing-step-3:
     - if: '$CI_PIPELINE_SOURCE == "push"'
       #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
       when: on_success
-      changes:
-        - /**/*
+      #changes:
+        #- /**/*
   variables:
     TK_ENV: "at"
   script:
