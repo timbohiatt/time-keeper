@@ -62,7 +62,7 @@ v2-infra-core-automated-testing-step-2:
   variables:
     TK_ENV: "at"
   script:
-    - ./demos/v2-self-managed-multi-region/multi-region-deploy-ops.sh $PROJECT_ID
+    - ./demos/v2-self-managed-multi-region/multi-cluster-deploy-ops.sh $PROJECT_ID
 
 #
 # Break into Ops & Developers Pipeline
@@ -83,4 +83,4 @@ v2-infra-core-automated-testing-step-3:
   variables:
     TK_ENV: "at"
   script:
-    - ./demos/v2-selmanaged-multi-region/multi-region-deploy-projects.sh $PROJECT_ID
+    - ./demos/v2-selmanaged-multi-region/multi-cluster-deploy-projects.sh $PROJECT_ID
