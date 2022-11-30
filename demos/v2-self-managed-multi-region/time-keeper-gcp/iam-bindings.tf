@@ -5,7 +5,9 @@ locals {
     "roles/monitoring.viewer",
   ]
   GitLabServiceAccountIAMRoles = [
-    "roles/owner"
+    "roles/owner",
+    "roles/editor",
+    "roles/container.developer",
   ]
 }
 
