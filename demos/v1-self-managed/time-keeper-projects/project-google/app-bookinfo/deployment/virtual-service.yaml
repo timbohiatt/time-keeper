@@ -1,0 +1,30 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: frontend
+  namespace: app-bookinfo
+spec: 
+  gateways:
+  - istio-system/ingress-gateway
+  hosts: 
+  - "bookinfo.time-keeper.watch"
+  http:
+  - match:
+    - uri:
+        exact: /productpage
+    - uri:
+        exact: /login
+    - uri:
+        exact: /logout
+    - uri:
+        exact: /callback
+    - uri:
+        exact: /api/v1/products
+    - uri:
+        exact: /static/
+    route: 
+    - destination: 
+        host: productpage
+        port: 
+          number: 9080
