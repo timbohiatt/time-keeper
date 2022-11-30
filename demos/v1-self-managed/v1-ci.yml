@@ -16,7 +16,7 @@ v1-infra-core-automated-testing-step-0:
     #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
       when: on_success
       changes:
-        - demos/v1-self-managed/**/*
+        - /**/*
   variables:
     TK_ENV: "at"
   script:
@@ -60,7 +60,7 @@ v1-infra-core-automated-testing-step-2:
     #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
       when: on_success
       changes:
-        - demos/v1-self-managed/**/*
+        - /**/*
   variables:
     TK_ENV: "at"
   script:
@@ -91,7 +91,7 @@ v1-infra-core-automated-testing-step-3:
     #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
       when: on_success
       changes:
-        - demos/v1-self-managed/**/*
+        - /**/*
   variables:
     TK_ENV: "at"
   script:
