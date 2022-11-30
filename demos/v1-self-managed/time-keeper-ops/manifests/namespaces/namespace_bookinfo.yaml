@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app-bookinfo
+  labels:
+    name: app-bookinfo
+    istio-injection: enabled
