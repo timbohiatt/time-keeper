@@ -16,7 +16,7 @@ v2-infra-core-automated-testing-step-0:
     #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
       when: on_success
       changes:
-        - demos/v2-self-managed-multi-region/**/*
+        - /**/*
   variables:
     TK_ENV: "at"
   script:
@@ -34,7 +34,7 @@ v2-infra-core-automated-testing-step-1:
       #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
       when: on_success
       changes:
-        - demos/v2-self-managed-multi-region/**/*
+        - /**/*
   variables:
     TK_ENV: "at"
   script:
@@ -42,9 +42,7 @@ v2-infra-core-automated-testing-step-1:
     - terraform -chdir="demos/v2-self-managed-multi-region/time-keeper-gcp/" init -backend-config="prefix=terraform/state/environments/v2/${TK_ENV}"
     - terraform -chdir="demos/v2-self-managed-multi-region/time-keeper-gcp/" apply -var="env=${TK_ENV}" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}" -auto-approve
     - terraform -chdir="demos/v2-self-managed-multi-region/time-keeper-gcp/" refresh -var="env=${TK_ENV}" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}"
-    - echo "GKE_CLUSTER_NAME=$(terraform -chdir="demos/v2-self-managed-multi-region/time-keeper-gcp/" output -raw GKE_CLUSTER_NAME)" >> build.env
-    - echo "GKE_CLUSTER_REGION=$(terraform -chdir="demos/v2-self-managed-multi-region/time-keeper-gcp/" output -raw GKE_CLUSTER_REGION)" >> build.env
-    - echo "GKE_CLUSTER_PROJECT=$(terraform -chdir="demos/v2-self-managed-multi-region/time-keeper-gcp/" output -raw GKE_CLUSTER_PROJECT)" >> build.env
+    - echo "PROJECT_ID=$(terraform -chdir="demos/v2-self-managed-multi-region/time-keeper-gcp/" output -raw PROJECT_ID)" >> build.env
   artifacts: 
     reports:
       dotenv: build.env
@@ -60,11 +58,11 @@ v2-infra-core-automated-testing-step-2:
       #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
       when: on_success
       changes:
-        - demos/v2-self-managed-multi-region/**/*
+        - /**/*
   variables:
     TK_ENV: "at"
   script:
-    - ./demos/v2-self-managed-multi-region/multi-region-deploy-ops.sh $GKE_CLUSTER_PROJECT
+    - ./demos/v2-self-managed-multi-region/multi-region-deploy-ops.sh $PROJECT_ID
 
 #
 # Break into Ops & Developers Pipeline
@@ -81,8 +79,8 @@ v2-infra-core-automated-testing-step-3:
       #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
       when: on_success
       changes:
-        - demos/v2-self-managed-multi-region/**/*
+        - /**/*
   variables:
     TK_ENV: "at"
   script:
-    - ./demos/v2-self-managed-multi-region/multi-region-deploy-projects.sh $GKE_CLUSTER_PROJECT
+    - ./demos/v2-selmanaged-multi-region/multi-region-deploy-projects.sh $PROJECT_ID
