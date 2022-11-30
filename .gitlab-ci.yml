@@ -15,6 +15,12 @@ stages:
 v1-infra-core-automated-testing-step-0:
   stage: automated-testing
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+    #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
+    when: on_success
+    changes:
+      - demos/v1-self-managed/**/*
   variables:
     TK_ENV: "at"
   script:
@@ -27,6 +33,12 @@ v1-infra-core-automated-testing-step-1:
   needs:
     - job: v1-infra-core-automated-testing-step-0
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+    #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
+    when: on_success
+    changes:
+      - demos/v1-self-managed/**/*
   variables:
     TK_ENV: "at"
   script:
@@ -47,6 +59,12 @@ v1-infra-core-automated-testing-step-2:
     - job: v1-infra-core-automated-testing-step-1
       artifacts: true
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+    #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
+    when: on_success
+    changes:
+      - demos/v1-self-managed/**/*
   variables:
     TK_ENV: "at"
   script:
@@ -58,6 +76,7 @@ v1-infra-core-automated-testing-step-2:
     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml || true
     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml || true
     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/kiali.yaml || true
+    - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/prometheus.yaml || true
 
 #
 # Break into Ops & Developers Pipeline
@@ -69,6 +88,12 @@ v1-infra-core-automated-testing-step-3:
     - job: v1-infra-core-automated-testing-step-1
       artifacts: true
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+    #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
+    when: on_success
+    changes:
+      - demos/v1-self-managed/**/*
   variables:
     TK_ENV: "at"
   script:
@@ -84,6 +109,9 @@ v1-infra-core-automated-testing-step-3:
     - kubectl apply -f demos/v1-self-managed/time-keeper-projects/project-google/app-hello-world/deployment --recursive
     - kubectl apply -f demos/v1-self-managed/time-keeper-projects/project-google/app-bank-of-anthos/deployment --recursive
     - kubectl apply -f demos/v1-self-managed/time-keeper-projects/project-google/app-bookinfo/deployment --recursive -n app-bookinfo
+
+
+
 
 
 ##

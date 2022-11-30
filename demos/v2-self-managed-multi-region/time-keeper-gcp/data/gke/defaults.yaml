@@ -1,0 +1,54 @@
+enabled: false
+
+# GKE Cluster Name 
+# cluster_name: 
+
+# Default GKE Cluster Region
+region: "europe-west1"
+
+# Minimum Master Node Version
+min_master_version: "1.24.5"
+
+# GKE Private Master Config
+private_cluster_config:
+  enable_private_endpoint: false
+  enable_private_nodes: true
+  master_ipv4_cidr_block: "172.16.0.0/28"
+
+subnet_config:
+  #cidr_range:
+  private_google_access: true
+
+# Default Service Account Email for GKE Cluster
+# service_account:
+
+
+# Default Labels set for all GKE Clusters
+#labels:
+#  environment: dev
+#  department: accounting
+#  application: example-app
+#  foo: bar
+
+logging_service: "logging.googleapis.com/kubernetes"
+monitoring_service: "monitoring.googleapis.com/kubernetes"
+
+enable_cost_management_config: true
+
+
+# Default General GKE Cluster Configuration
+#cluster_config:
+#  
+#  min_master_version: "1.24.5"
+#  remove_default_node_pool: true
+#  initial_node_count: 1
+#  enable_shielded_nodes: true
+#  enable_legacy_abac: false
+#  cost_management_config: 
+#    enabled: true
+#  master_auth:
+#    client_certificate_config:
+#      issue_client_certificate: false
+#  maintenance_policy:
+#      daily_maintenance_window:
+#        start_time: "03:00"
