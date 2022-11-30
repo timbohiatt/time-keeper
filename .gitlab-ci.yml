@@ -77,6 +77,8 @@ v1-infra-core-automated-testing-step-2:
     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml || true
     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/kiali.yaml || true
     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/prometheus.yaml || true
+    - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/jaeger.yaml || true
+    - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/zipkin.yaml || true
 
 #
 # Break into Ops & Developers Pipeline
