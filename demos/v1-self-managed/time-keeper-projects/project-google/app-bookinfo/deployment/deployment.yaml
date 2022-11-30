@@ -330,6 +330,9 @@ spec:
       - name: productpage
         image: rinormaloku/productpage:istio-auth0 
         imagePullPolicy: IfNotPresent
+        envFrom:
+        - secretRef:
+            name: app-credentials
         ports:
         - containerPort: 9080
         volumeMounts:
