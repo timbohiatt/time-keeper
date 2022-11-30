@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: app-pasta
-        image: gcr.io/cloudrun/hello
+        image: palladius/pastang:0.5
         ports:
         - containerPort: 8080
 ---
