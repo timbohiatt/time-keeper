@@ -18,9 +18,9 @@ v1-infra-core-automated-testing-step-0:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push"'
     #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
-    when: on_success
-    changes:
-      - demos/v1-self-managed/**/*
+      when: on_success
+      changes:
+        - demos/v1-self-managed/**/*
   variables:
     TK_ENV: "at"
   script:
@@ -36,9 +36,9 @@ v1-infra-core-automated-testing-step-1:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push"'
     #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
-    when: on_success
-    changes:
-      - demos/v1-self-managed/**/*
+      when: on_success
+      changes:
+        - demos/v1-self-managed/**/*
   variables:
     TK_ENV: "at"
   script:
@@ -62,9 +62,9 @@ v1-infra-core-automated-testing-step-2:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push"'
     #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
-    when: on_success
-    changes:
-      - demos/v1-self-managed/**/*
+      when: on_success
+      changes:
+        - demos/v1-self-managed/**/*
   variables:
     TK_ENV: "at"
   script:
@@ -93,9 +93,9 @@ v1-infra-core-automated-testing-step-3:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push"'
     #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
-    when: on_success
-    changes:
-      - demos/v1-self-managed/**/*
+      when: on_success
+      changes:
+        - demos/v1-self-managed/**/*
   variables:
     TK_ENV: "at"
   script:
@@ -111,111 +111,3 @@ v1-infra-core-automated-testing-step-3:
     - kubectl apply -f demos/v1-self-managed/time-keeper-projects/project-google/app-hello-world/deployment --recursive
     - kubectl apply -f demos/v1-self-managed/time-keeper-projects/project-google/app-bank-of-anthos/deployment --recursive
     - kubectl apply -f demos/v1-self-managed/time-keeper-projects/project-google/app-bookinfo/deployment --recursive -n app-bookinfo
-
-
-##
-## v1-infra-core
-## INT Environment
-##
-
-# v1-infra-core-integration-step-0:
-#   stage: integration
-#   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
-#   variables:
-#     TK_ENV: "int"
-#   script:
-#     - terraform --version
-#     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init -backend-config="prefix=terraform/state/environments/${TK_ENV}"
-#     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=${TK_ENV}" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}"
-
-# v1-infra-integration-step-1:
-#   stage: integration
-#   needs:
-#     - job: v1-infra-integration-step-0
-#   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
-#   variables:
-#     TK_ENV: "int"
-#   script:
-#     - terraform --version
-#     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init -backend-config="prefix=terraform/state/environments/${TK_ENV}"
-#     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" apply -var="env=${TK_ENV}" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}" -auto-approve
-#     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" refresh -var="env=${TK_ENV}" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}"
-#     - echo "GKE_CLUSTER_NAME=$(terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" output -raw GKE_CLUSTER_NAME)" >> build.env
-#     - echo "GKE_CLUSTER_REGION=$(terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" output -raw GKE_CLUSTER_REGION)" >> build.env
-#     - echo "GKE_CLUSTER_PROJECT=$(terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" output -raw GKE_CLUSTER_PROJECT)" >> build.env
-#   artifacts: 
-#     reports:
-#       dotenv: build.env
-
-# v1-infra-core-integration-step-2:
-#   stage: integration
-#   needs:
-#     - job: v1-infra-integration-step-1
-#       artifacts: true
-#   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
-#   variables:
-#     TK_ENV: "int"
-#   script:
-#     - echo "$GKE_CLUSTER_NAME"
-#     - echo "$GKE_CLUSTER_REGION"
-#     - echo "$GKE_CLUSTER_NAME"
-#     - gcloud container clusters get-credentials ${GKE_CLUSTER_NAME} --region="${GKE_CLUSTER_REGION}" --project="${GKE_CLUSTER_PROJECT}"
-#     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/namespace.yaml
-#     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml || true
-#     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml || true
-
-
-##
-## v1-infra-core
-## VAL Environment
-##
-
-# v1-infra-core-validation-step-0:
-#   stage: validation
-#   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
-#   variables:
-#     TK_ENV: "val"
-#   script:
-#     - terraform --version
-#     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init -backend-config="prefix=terraform/state/environments/${TK_ENV}"
-#     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" plan -var="env=${TK_ENV}" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}"
-
-# v1-infra-validation-step-1:
-#   stage: validation
-#   needs:
-#     - job: v1-infra-validation-step-0
-#   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
-#   variables:
-#     TK_ENV: "val"
-#   script:
-#     - terraform --version
-#     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" init -backend-config="prefix=terraform/state/environments/${TK_ENV}"
-#     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" apply -var="env=${TK_ENV}" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}" -auto-approve
-#     - terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" refresh -var="env=${TK_ENV}" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}"
-#     - echo "GKE_CLUSTER_NAME=$(terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" output -raw GKE_CLUSTER_NAME)" >> build.env
-#     - echo "GKE_CLUSTER_REGION=$(terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" output -raw GKE_CLUSTER_REGION)" >> build.env
-#     - echo "GKE_CLUSTER_PROJECT=$(terraform -chdir="demos/v1-self-managed/time-keeper-gcp/" output -raw GKE_CLUSTER_PROJECT)" >> build.env
-#   artifacts: 
-#     reports:
-#       dotenv: build.env
-
-# v1-infra-core-validation-step-2:
-#   stage: validation
-#   needs:
-#     - job: v1-infra-validation-step-1
-#       artifacts: true
-#   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
-#   variables:
-#     TK_ENV: "val"
-#   script:
-#     - echo "$GKE_CLUSTER_NAME"
-#     - echo "$GKE_CLUSTER_REGION"
-#     - echo "$GKE_CLUSTER_NAME"
-#     - gcloud container clusters get-credentials ${GKE_CLUSTER_NAME} --region="${GKE_CLUSTER_REGION}" --project="${GKE_CLUSTER_PROJECT}"
-#     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/namespace.yaml
-#     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml || true
-#     - kubectl apply -f demos/v1-self-managed/time-keeper-infra/manifests/istio/install-manifests.yaml || true
-
-
-#===========================================================================================================================
-#===========================================================================================================================
