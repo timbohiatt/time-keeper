@@ -113,9 +113,6 @@ v1-infra-core-automated-testing-step-3:
     - kubectl apply -f demos/v1-self-managed/time-keeper-projects/project-google/app-bookinfo/deployment --recursive -n app-bookinfo
 
 
-
-
-
 ##
 ## v1-infra-core
 ## INT Environment
