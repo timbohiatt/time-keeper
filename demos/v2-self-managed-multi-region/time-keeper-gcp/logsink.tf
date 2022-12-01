@@ -4,7 +4,7 @@ resource "google_logging_billing_account_sink" "billing-sink" {
   billing_account = "${var.billing_account}"
 
   # Can export to pubsub, cloud storage, or bigquery
-  destination = google_bigquery_dataset.billing_dataset.self_link
+  destination = "bigquery.googleapis.com/${google_bigquery_dataset.billing_dataset.id}"
 }
 
 resource "google_project_iam_binding" "log-writer" {

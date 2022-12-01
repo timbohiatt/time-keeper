@@ -1,6 +1,6 @@
 resource "google_bigquery_dataset" "billing_dataset" {
   project = google_project.project.project_id
-  dataset_id                  = "raw_billing_data"
+  dataset_id                  = "raw-billing-data"
   friendly_name               = "All Billing Data"
   description                 = "This Dataset is used for Detailed Cost Analysis"
   location                    = "EU"
