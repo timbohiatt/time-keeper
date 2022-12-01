@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: app-pasta
-        image: palladius/pastang:0.5
+        image: hello-world
         ports:
         - containerPort: 8080
 ---
