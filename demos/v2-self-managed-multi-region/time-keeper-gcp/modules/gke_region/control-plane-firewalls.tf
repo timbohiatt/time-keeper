@@ -1,12 +1,12 @@
 
 // Create the firewall rules to allow nodes to communicate with the control plane
 resource "google_compute_firewall" "egress-allow-gke-node" {
-  project = google_project.project.project_id
-  network = google_compute_network.vpc-global.self_link
+  project = var.project_id
+  network = var.vpc_network_self_link
 
   //name = "${var.prefix}-${var.demo_name}-${var.env}-gke-node-allow-egress-${random_id.postfix.hex}"
   //name = "${local.cluster_name}-egress"
-  name = "${local.cluster_name}-egress${random_integer.np_ext_salt.result}"
+  name = "${local.cluster_name}-egress-${random_integer.np_ext_salt.result}"
 
   priority  = "200"
   direction = "EGRESS"
@@ -25,11 +25,11 @@ resource "google_compute_firewall" "egress-allow-gke-node" {
 }
 
 resource "google_compute_firewall" "ingress-allow-gke-node" {
-  project = google_project.project.project_id
-  network = google_compute_network.vpc-global.self_link
+  project = var.project_id
+  network = var.vpc_network_self_link
 
   //name = "${var.prefix}-${var.demo_name}-${var.env}-gke-node-allow-ingress-${random_id.postfix.hex}"
-  name = "${local.cluster_name}-ingress${random_integer.np_ext_salt.result}"
+  name = "${local.cluster_name}-ingress-${random_integer.np_ext_salt.result}"
 
   priority  = "200"
   direction = "INGRESS"
