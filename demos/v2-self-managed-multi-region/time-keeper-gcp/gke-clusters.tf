@@ -18,5 +18,5 @@ module "gke_region" {
   enable_cost_management_config = try(each.value.enable_cost_management_config, null)
   min_master_version            = try(each.value.min_master_version, null)
 
-  depends_on = [google_compute_firewall.egress-allow-gke-node, google_compute_firewall.ingress-allow-gke-node]
+  //depends_on = [google_compute_firewall.egress-allow-gke-node, google_compute_firewall.ingress-allow-gke-node]
 }
