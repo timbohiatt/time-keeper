@@ -26,6 +26,7 @@ locals {
     //"gkehub.googleapis.com",
     //"mesh.googleapis.com",
     "bigquerydatatransfer.googleapis.com",
+    "bigquery.googleapis.com",
   ]
 }
 
