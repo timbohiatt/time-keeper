@@ -1,5 +1,5 @@
 resource "google_logging_billing_account_sink" "billing-sink" {
-  name        = "billing-data-sync"
+  name        = "billing-data-sync-${google_project.project.project_id}"
   description = "Exporting Billing Account Data"
   billing_account = "${var.billing_account}"
 
