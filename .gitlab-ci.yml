@@ -1,6 +1,8 @@
 include:
   - local: '/demos/v1-self-managed/v1-ci.yml'
-  - local: '/demos/v2-self-managed-multi-region/v2-ci.yml'
+  - local: '/demos/v2-self-managed-multi-region/v2-ci-at.yml'
+  - local: '/demos/v2-self-managed-multi-region/v2-ci-int.yml'
+  - local: '/demos/v2-self-managed-multi-region/v2-ci-val.yml'
 stages:
   - automated-testing
   - integration
