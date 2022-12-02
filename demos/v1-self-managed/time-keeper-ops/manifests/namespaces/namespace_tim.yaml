@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app-tim
+  labels:
+    name: app-tim
+    istio-injection: enabled

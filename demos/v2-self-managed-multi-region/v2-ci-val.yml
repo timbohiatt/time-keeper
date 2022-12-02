@@ -12,7 +12,8 @@ v2-infra-core-validation-step-0:
   stage: validation
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push"'
+    #- if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != "develop"'
     #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
       when: on_success
       #changes:
@@ -30,7 +31,8 @@ v2-infra-core-validation-step-1:
     - job: v2-infra-core-validation-step-0
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push"'
+    #- if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != "develop"'
       #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
       when: on_success
       #changes:
@@ -54,7 +56,8 @@ v2-infra-core-validation-step-2:
       artifacts: true
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push"'
+    #- if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != "develop"'
       #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
       when: on_success
       #changes:
@@ -75,7 +78,8 @@ v2-infra-core-validation-step-3:
       artifacts: true
   image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push"'
+    #- if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != "develop"'
       #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
       when: on_success
       #changes:
