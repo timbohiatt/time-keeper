@@ -1,4 +1,4 @@
-enabled: false
+enabled: true
 
 # GKE Cluster Name 
 # cluster_name: 
