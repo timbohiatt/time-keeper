@@ -3,7 +3,7 @@ resource "google_container_cluster" "gke" {
   provider = google-beta
 
   project  = google_project.project.project_id
-  name     = "${var.prefix}-${var.demo_name}-${var.env}" 
+  name     = "${var.prefix}-${var.demo_name}-${var.env}"
   location = var.region
 
   network    = google_compute_network.vpc-global.self_link
@@ -21,6 +21,10 @@ resource "google_container_cluster" "gke" {
 
   resource_labels = {
     //mesh_id = "proj-${google_project.project.number}",
+  }
+
+  cost_management_config {
+    enabled = true
   }
 
   master_auth {
@@ -59,12 +63,16 @@ resource "google_container_cluster" "gke" {
   }
 
   private_cluster_config {
-    enable_private_endpoint = true
+    enable_private_endpoint = false
     enable_private_nodes    = true
     master_ipv4_cidr_block  = var.master_ipv4_cidr_block
   }
 
   master_authorized_networks_config {
+    cidr_blocks {
+        cidr_block   = "0.0.0.0/0"
+        display_name = "all"
+    }
   }
 
   ip_allocation_policy {
@@ -84,7 +92,7 @@ resource "google_container_cluster" "gke" {
   //resource_labels = var.cluster_labels
 
   lifecycle {
-    ignore_changes = [master_auth, node_config[0]]
+    ignore_changes = [master_auth, node_config]
   }
 
   timeouts {
@@ -98,11 +106,11 @@ resource "google_container_cluster" "gke" {
 
 // TODO - Gary - What's the purpose of the internal and external node pool? I think I am missing something.
 resource "google_container_node_pool" "np-external" {
-  project     = google_project.project.project_id
-  name = "${var.prefix}-${var.demo_name}-${var.env}-np-ext"
+  project = google_project.project.project_id
+  name    = "${var.prefix}-${var.demo_name}-${var.env}-np-ext"
   //name_prefix = "${var.prefix}-${var.demo_name}-${var.env}-np-ext"
-  location    = var.region
-  cluster     = google_container_cluster.gke.name
+  location = var.region
+  cluster  = google_container_cluster.gke.name
 
   node_config {
     image_type   = "COS_CONTAINERD"
@@ -153,19 +161,15 @@ resource "google_container_node_pool" "np-external" {
     delete = "2h"
   }
 
-  lifecycle {
-    create_before_destroy = true
-  }
-
 }
 
 // Workload nodepool
 resource "google_container_node_pool" "np-internal" {
-  project     = google_project.project.project_id
-  name = "${var.prefix}-${var.demo_name}-${var.env}-np-wpl-1"
+  project = google_project.project.project_id
+  name    = "${var.prefix}-${var.demo_name}-${var.env}-np-wpl-1"
   //name_prefix = "${var.prefix}-${var.demo_name}-${var.env}-np-wpl-1"
-  location    = var.region
-  cluster     = google_container_cluster.gke.name
+  location = var.region
+  cluster  = google_container_cluster.gke.name
 
   node_config {
     image_type   = "COS_CONTAINERD"
@@ -214,9 +218,4 @@ resource "google_container_node_pool" "np-internal" {
     update = "40m"
     delete = "2h"
   }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
 }

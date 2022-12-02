@@ -34,10 +34,13 @@ variable "master_ipv4_cidr_block" {
 }
 
 variable "demo_name" {
-    type = string
+  type = string
 }
 
 variable "env" {
-    type = string
+  type = string
 }
 
+variable "GitLabServiceAccountEmail"{
+  type = string
+}

@@ -1,0 +1,29 @@
+enabled: false
+
+# GKE Cluster Name 
+# cluster_name: 
+
+# GKE Cluster Region
+region: "us-west1"
+
+# Minimum Master Node Version
+# min_master_version "1.24.5"
+
+# GKE Private Master Config
+private_cluster_config:
+  enable_private_endpoint: false
+  enable_private_nodes: true
+  master_ipv4_cidr_block: "172.16.0.32/28"
+
+# GKE Subnet IP Address Ranges
+subnet_config:
+  cidr_range: "10.0.8.0/22"
+  #private_google_access: true
+
+# Service Account Email for GKE Cluster
+# service_account:
+
+# logging_service: "logging.googleapis.com/kubernetes"
+# monitoring_service: "monitoring.googleapis.com/kubernetes"
+
+#enable_cost_management_config: true

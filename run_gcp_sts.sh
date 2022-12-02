@@ -2,7 +2,7 @@
 
 PAYLOAD=$(cat <<EOF
 {
-"audience": "//iam.googleapis.com/projects/${GCP_PROJECT_NUMBER}/locations/global/workloadIdentityPools/${GCP_POOL_ID}/providers/${GCP_PROVIDER_ID}",
+"audience": "//iam.googleapis.com/projects/${PROJECT_NUMBER}/locations/global/workloadIdentityPools/${POOL_ID}/providers/${PROVIDER_ID}",
 "grantType": "urn:ietf:params:oauth:grant-type:token-exchange",
 "requestedTokenType": "urn:ietf:params:oauth:token-type:access_token",
 "scope": "https://www.googleapis.com/auth/cloud-platform",
@@ -19,13 +19,13 @@ FEDERATED_TOKEN=$(curl -X POST "https://sts.googleapis.com/v1/token" \
  | jq -r '.access_token'
  )
 
-ACCESS_TOKEN=$(curl -X POST "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${GCP_SERVICE_ACCOUNT}:generateAccessToken" \
+ACCESS_TOKEN=$(curl -X POST "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${SERVICE_ACCOUNT_EMAIL}:generateAccessToken" \
 --header "Accept: application/json" \
 --header "Content-Type: application/json" \
 --header "Authorization: Bearer ${FEDERATED_TOKEN}" \
 --data '{"scope": ["https://www.googleapis.com/auth/cloud-platform"]}' \
 | jq -r '.accessToken'
 )
-echo "${ACCESS_TOKEN}"
 
-echo "CLOUDSDK_AUTH_ACCESS_TOKEN=${ACCESS_TOKEN}" >> CLOUDSDK_AUTH_ACCESS_TOKEN.env
+echo "export CLOUDSDK_AUTH_ACCESS_TOKEN=${ACCESS_TOKEN}" > ${VARIABLES_FILE}
+echo "export CLOUDSDK_AUTH_ACCESS_TOKEN=${ACCESS_TOKEN}"

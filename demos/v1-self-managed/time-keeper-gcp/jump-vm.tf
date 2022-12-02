@@ -19,23 +19,23 @@
 
 
 resource "google_compute_firewall" "jump-ssh-allow" {
-  project = google_project.project.project_id
-  network = google_compute_network.vpc-global.self_link
-  direction="INGRESS"
+  project   = google_project.project.project_id
+  network   = google_compute_network.vpc-global.self_link
+  direction = "INGRESS"
 
   allow {
     protocol = "tcp"
   }
 
-  source_ranges=["35.235.240.0/20"]
-  name = "${var.prefix}-${var.demo_name}-${var.env}-iap"
-  priority  = "1000"
+  source_ranges = ["35.235.240.0/20"]
+  name          = "${var.prefix}-${var.demo_name}-${var.env}-iap"
+  priority      = "1000"
 }
 
 
 
 resource "google_service_account" "jump-vm" {
-  project = google_project.project.project_id
+  project      = google_project.project.project_id
   account_id   = "${var.prefix}-${var.env}-jump-vm"
   display_name = "Service Account jump-vm"
 }
@@ -47,7 +47,7 @@ resource "google_project_iam_member" "jump-vm-admin" {
 }
 
 resource "google_compute_instance" "jump-vm" {
-  project = google_project.project.project_id
+  project      = google_project.project.project_id
   name         = "jump-vm"
   machine_type = "e2-medium"
   zone         = "europe-west6-a"
@@ -60,10 +60,10 @@ resource "google_compute_instance" "jump-vm" {
 
   network_interface {
     //network = google_compute_network.vpc-global.self_link
-    subnetwork =google_compute_subnetwork.subnet[0].self_link
+    subnetwork = google_compute_subnetwork.subnet[0].self_link
 
     //access_config {
-      // Ephemeral public IP
+    // Ephemeral public IP
     //}
   }
 

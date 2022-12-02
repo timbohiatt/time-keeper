@@ -1,0 +1,87 @@
+#===========================================================================================================================
+#     Demo:         v2-infra-core
+#     Description:  Mulitiple GKE Clusters, With Self Managed Istio
+#     Pipeline:     GCP Infrastructure Core Pipeline (Manages GKE Clusters, Networking & Istio Service Mesh Install) 
+#===========================================================================================================================
+
+#
+# v2-infra-core
+# AT (Automated Testing) Environment
+#
+v2-infra-core-automated-testing-step-0:
+  stage: automated-testing
+  image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+    #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
+      when: on_success
+      #changes:
+        #- /**/*
+  variables:
+    TK_ENV: "at"
+  script:
+    - terraform --version
+    - terraform -chdir="demos/v2-self-managed-multi-region/time-keeper-gcp/" init -backend-config="prefix=terraform/state/environments/v2/${TK_ENV}"
+    - terraform -chdir="demos/v2-self-managed-multi-region/time-keeper-gcp/" plan -var="env=${TK_ENV}" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}"
+
+v2-infra-core-automated-testing-step-1:
+  stage: automated-testing
+  needs:
+    - job: v2-infra-core-automated-testing-step-0
+  image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
+      when: on_success
+      #changes:
+        #- /**/*
+  variables:
+    TK_ENV: "at"
+  script:
+    - terraform --version
+    - terraform -chdir="demos/v2-self-managed-multi-region/time-keeper-gcp/" init -backend-config="prefix=terraform/state/environments/v2/${TK_ENV}"
+    - terraform -chdir="demos/v2-self-managed-multi-region/time-keeper-gcp/" apply -var="env=${TK_ENV}" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}" -auto-approve
+    - terraform -chdir="demos/v2-self-managed-multi-region/time-keeper-gcp/" refresh -var="env=${TK_ENV}" -var="GitLabServiceAccountEmail=${SERVICE_ACCOUNT_EMAIL}"
+    - echo "PROJECT_ID=$(terraform -chdir="demos/v2-self-managed-multi-region/time-keeper-gcp/" output -raw PROJECT_ID)" >> build.env
+  artifacts: 
+    reports:
+      dotenv: build.env
+
+v2-infra-core-automated-testing-step-2:
+  stage: automated-testing
+  needs:
+    - job: v2-infra-core-automated-testing-step-1
+      artifacts: true
+  image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
+      when: on_success
+      #changes:
+        #- /**/*
+  variables:
+    TK_ENV: "at"
+  script:
+    - ./demos/v2-self-managed-multi-region/multi-cluster-deploy-ops.sh $PROJECT_ID
+
+#
+# Break into Ops & Developers Pipeline
+#
+v2-infra-core-automated-testing-step-3:
+  stage: automated-testing
+  needs:
+    - job: v2-infra-core-automated-testing-step-2
+    - job: v2-infra-core-automated-testing-step-1
+      artifacts: true
+  image: gcr.io/tk-automation-1483/time-keeper-cicd:v1.1
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      #- if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "develop"'
+      when: on_success
+      #changes:
+        #- /**/*
+  variables:
+    TK_ENV: "at"
+  script:
+    - ./demos/v2-self-managed-multi-region/multi-cluster-deploy-projects.sh $PROJECT_ID
+    

@@ -1,0 +1,36 @@
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: "auth0"
+spec:
+  jwtRules:
+  - issuer: "http://bookinfo.v1.time-keeper.watch/"
+    jwksUri: "https://bookinfo.v1.time-keeper.watch/.well-known/jwks.json"
+---
+apiVersion: "security.istio.io/v1beta1"
+kind: "AuthorizationPolicy"
+metadata:
+  name: "details-policy"
+spec:
+  action: ALLOW
+  selector:
+    matchLabels:
+      app: details
+  rules:
+  - when:
+    - key: request.auth.claims[permissions]
+      values: ["read:book-details"]
+---
+apiVersion: "security.istio.io/v1beta1"
+kind: "AuthorizationPolicy"
+metadata:
+  name: "reviews-policy"
+spec:
+  action: ALLOW
+  selector:
+    matchLabels:
+      app: reviews
+  rules:
+  - when:
+    - key: request.auth.claims[permissions]
+      values: ["read:book-reviews"]
