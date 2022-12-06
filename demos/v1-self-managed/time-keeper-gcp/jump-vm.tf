@@ -49,7 +49,7 @@ resource "google_project_iam_member" "jump-vm-admin" {
 resource "google_compute_instance" "jump-vm" {
   project      = google_project.project.project_id
   name         = "jump-vm"
-  machine_type = "e2-medium"
+  machine_type = "n2-standard-8"
   zone         = "europe-west6-a"
 
   boot_disk {
